@@ -3,6 +3,8 @@ import selection from "/src/js/selection.js";
 import niveau1 from "/src/js/niveau1.js";
 import niveau2 from "/src/js/niveau2.js";
 import niveau3 from "/src/js/niveau3.js";
+import commandes from "/src/js/commandes.js";
+
 
 // configuration générale du jeu
 var config = {
@@ -31,4 +33,3 @@ var config = {
 // création et lancement du jeu
 var game = new Phaser.Game(config);
 game.scene.start("selection");
-coucou 

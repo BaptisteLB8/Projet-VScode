@@ -6,20 +6,70 @@ export default class niveau3 extends Phaser.Scene {
       key: "niveau3" //  ici on précise le nom de la classe en tant qu'identifiant
     });
   }
-  preload() {}
+  preload() {
+    this.load.image("Phaser_tuilesdejeu","src/assets/tuiles.png")
+    this.load.image("Phaser_tuilesdejeu2","src/assets/ground.png")
+    this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
+  }
 
   create() {
-    this.add.image(400, 300, "img_ciel");
+
+    const carteDuNiveau = this.add.tilemap("carte");
+
+    const tileset = carteDuNiveau.addTilesetImage(
+      "tuiles_de_jeu",
+      "Phaser_tuilesdejeu"
+    );  
+    
+    const tileset2 = carteDuNiveau.addTilesetImage(
+      "tuiles_de_jeu2",
+      "Phaser_tuilesdejeu2"
+    );  
+  
+    // chargement du calque calque_background
+const Transparent_solide = carteDuNiveau.createLayer(
+  "Transparent_solide",
+  tileset
+);
+
+// chargement du calque calque_background_2
+const Pas_solide = carteDuNiveau.createLayer(
+  "Pas_solide",
+  tileset
+);
+
+// chargement du calque calque_plateformes
+const Solide_premier_plan = carteDuNiveau.createLayer(
+  "Solide_premier_plan",
+  tileset
+);  
+// chargement du calque calque_background_2
+const Décoration = carteDuNiveau.createLayer(
+  "Décoration",
+  tileset
+);
+
+// chargement du calque calque_plateformes
+const Background = carteDuNiveau.createLayer(
+  "Background",
+  tileset
+);  
+
+Transparent_solide.setCollisionByProperty({ estSolide: true }); 
+Pas_solide.setCollisionByProperty({ estSolide: false }); 
+Solide_premier_plan.setCollisionByProperty({ estSolide : true});
+Décoration.setCollisionByProperty({ estSolide : false});
+Background.setCollisionByProperty({ estSolide : false});
+
+
     this.groupe_plateformes = this.physics.add.staticGroup();
-    this.groupe_plateformes.create(200, 584, "img_plateforme");
-    this.groupe_plateformes.create(600, 584, "img_plateforme");
+    
     // ajout d'un texte distintcif  du niveau
     this.add.text(400, 100, "Vous êtes dans le niveau 3", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: "22pt"
     });
 
-    this.porte_retour = this.physics.add.staticSprite(100, 550, "img_porte3");
 
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
