@@ -56,3 +56,4 @@ export default class niveau1 extends Phaser.Scene {
     }
   }
 }
+f 
