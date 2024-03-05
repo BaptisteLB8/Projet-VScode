@@ -16,7 +16,7 @@
     }
   
     create() {
-     // on place les éléments de fond
+  
       this.add.image(0, 0, "image_fond").setOrigin(0).setDepth(0).setDisplaySize(800, 600)
   
       //on ajoute un bouton de clic, nommé bouton_play
@@ -55,11 +55,23 @@
       //bouton_settings.on("pointerup", () => {
         //this.scene.start("commandes");
       //});
-      var bouton_SoundOn = this.add.image (550,50,"soundon").setDepth(1).setDisplaySize(150, 50);
-    bouton_SoundOn.setInteractive();
-    bouton_SoundOn.on("pointerup", () => {
-
-    });
+      this.music = this.sound.add('background');
+      this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
+  
+      this.bouton_SoundOn = this.add.image(750, 50, "soundon").setDepth(1).setDisplaySize(50, 45);
+      this.bouton_SoundOn.setInteractive();
+  
+      this.bouton_SoundOn.on("pointerup", () => {
+          if (this.musicPlaying) {
+              this.music.stop(); // Arrêter la musique
+              this.bouton_SoundOn.setTexture("soundoff"); // Changer le bouton en Sound Off
+              this.musicPlaying = false; // Mettre à jour le statut de la musique
+          } else {
+              this.music.play(); // Reprendre la musique
+              this.bouton_SoundOn.setTexture("soundon"); // Changer le bouton en Sound On
+              this.musicPlaying = true; // Mettre à jour le statut de la musique
+          }
+      });
     }
     
   } 
