@@ -21,6 +21,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
     this.load.image('soundon', 'src/assets/SoundOn.png'); 
     this.load.image('soundoff', 'src/assets/SoundOff.png'); 
+    this.load.image('porte_retour', 'src/assets/door3.png'); 
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -39,6 +40,7 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setScale(grossisment);
     this.clavier = this.input.keyboard.createCursorKeys(); 
     this.player.setPipeline('Light2D');
+    
 
     this.anims.create({
       key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
@@ -117,7 +119,7 @@ this.text = this.add.text(
   }
 ).setOrigin(0);
 
-
+this.add.image(3145, 200, "porte_retour").setOrigin(0).setDepth(0).setDisplaySize(30, 50).setPipeline('Light2D');
       
   }
 
@@ -159,10 +161,9 @@ if (this.vie==0){
   this.scene.start("fin")
 }
 
-    if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
+    if (this.clavier.space.isDown) {
         if (this.physics.overlap(this.player, this.porte_retour)) {
-            console.log("niveau 3 : retour vers selection");
-            this.scene.switch("selection");
+            this.scene.start("selection");
         }
     }
 
