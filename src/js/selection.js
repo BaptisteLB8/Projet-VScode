@@ -5,7 +5,7 @@
 
 
     constructor() {
-      super({ key: "menu" });
+      super({ key: "selection" });
     }
     //on charge les images
     preload() {
