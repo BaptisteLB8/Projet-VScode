@@ -65,20 +65,20 @@ export default class niveau3 extends Phaser.Scene {
     const Transparent_solide = map.createLayer("Transparent_solide", [ts1, ts2, ts3]);
     const Sol = map.createLayer("Sol", [ts1, ts2, ts3]);
     const Pas_solide = map.createLayer("Pas_solide", [ts1, ts2, ts3]);
-    const Solide_premier_plan = map.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
+    this.Solide_premier_plan = map.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
     const Decoration = map.createLayer("Decoration", [ts1, ts2, ts3]);
     
 
 Transparent_solide.setCollisionByProperty({ estSolide: true }); 
 Pas_solide.setCollisionByProperty({ estSolide: false }); 
-Solide_premier_plan.setCollisionByProperty({ estSolide : true});
+this.Solide_premier_plan.setCollisionByProperty({ estSolide : true});
 Decoration.setCollisionByProperty({ estSolide : false});
 Background.setCollisionByProperty({ estSolide : false});
 Sol.setCollisionByProperty({ estSolide : true});
 
 
 // ajout d'une collision entre le joueur et le calque plateformes
-this.physics.add.collider(this.player, Solide_premier_plan ); 
+this.physics.add.collider(this.player, this.Solide_premier_plan ); 
 this.physics.add.collider(this.player, Transparent_solide ); 
 this.physics.add.collider(this.player, Sol ); 
 
@@ -99,7 +99,7 @@ Background.setPipeline('Light2D');
 Transparent_solide.setPipeline('Light2D');
 Decoration.setPipeline('Light2D');
 Sol.setPipeline('Light2D');
-Solide_premier_plan.setPipeline('Light2D');   
+this.Solide_premier_plan.setPipeline('Light2D');   
 Pas_solide.setPipeline('Light2D');  
       
   }
@@ -122,20 +122,16 @@ Pas_solide.setPipeline('Light2D');
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
       this.player.setVelocityY(-320);
     }
+if (this.player.body.blocked.down) {
+    var t = this.Solide_premier_plan.getTileAtWorldXY(this.player.x, this.player.y+30);
+    if (t!=null && t.index == 396) this.gameOver=true;
+    if (t!=null && t.index == 395) this.gameOver=true;
+}
 
-   this.physics.overlap(this.player, this.Solide_premier_plan, function(){
-      console.log("niveau 3 : retour vers selection");
-      this.scene.switch("selection");
-      this.physics.pause();
-      this.player.setTint(0xff0000);
-      this.gameOver = true;
-    }, null, this);
-
-    // Autres logiques de mise à jour...
 
 
     if (this.gameOver == true) {
-      this.scene.start("selection");
+      this.scene.start("niveau3");
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
