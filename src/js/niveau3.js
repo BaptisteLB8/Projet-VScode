@@ -12,7 +12,6 @@ export default class niveau3 extends Phaser.Scene {
     this.vie=3;
     this.zone_texte_score;
     this.text=null;
-    this.porteContactee = false;
   }
 
   preload() {
@@ -31,6 +30,7 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   create() {
+    this.porteContactee=true;
     const grossisment =0.7;
     this.player = this.physics.add.sprite(0, 0, 'img_perso');
     this.player.setDepth(100);
@@ -167,22 +167,36 @@ if (this.vie==0){
   this.scene.start("fin")
 }
 
-if (this.clavier.space.isDown && !this.porteContactee) {
-  if (this.physics.overlap(this.player, this.porte_retour)) {
-      this.scene.start("selection");
-      this.porteContactee = true; // Marque la porte comme contactée
-  }
-}
-if (!this.physics.overlap(this.player, this.porte_retour)) {
-  this.porteContactee = false;
-}
+  // Déplacements du joueur
+  // ...
 
-    this.light.x = this.player.x;
-    this.light.y = this.player.y;
-    
-    if (this.text) {
-      this.text.x = this.cameras.main.scrollX + 16;
-    this.text.y = this.cameras.main.scrollY + 16;
+  // Gestion des collisions avec les tuiles
+  // ...
+
+  // Si le joueur est en collision avec la porte et a appuyé sur la touche d'espace
+  if (this.clavier.space.isDown && this.physics.overlap(this.player, this.porte_retour)) {
+    // Si la porte n'a pas déjà été contactée
+    if (!this.porteContactee) {
+      // Marquer la porte comme contactée
+      this.porteContactee = true;
+      // Rediriger vers la scène de sélection
+      this.scene.switch("selection");
     }
+  } else {
+    // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
+    this.porteContactee = false;
+  }
+
+  // Mise à jour de la position de la lumière
+  this.light.x = this.player.x;
+  this.light.y = this.player.y;
+  
+  // Mise à jour de la position du texte
+  if (this.text) {
+    this.text.x = this.cameras.main.scrollX + 16;
+    this.text.y = this.cameras.main.scrollY + 16;
+  }
+
+
 }
 }
