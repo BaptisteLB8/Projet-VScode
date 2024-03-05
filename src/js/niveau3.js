@@ -30,6 +30,7 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
     this.physics.add.collider(this.player, this.groupe_plateformes); 
+    this.physics.world.setBounds(-50,0, 2800, 1000);
     this.player.setBounce(0.2); 
     this.clavier = this.input.keyboard.createCursorKeys(); 
     
@@ -115,7 +116,9 @@ this.groupe_plateformes = this.physics.add.staticGroup();
   if (this.clavier.up.isDown && this.player.body.blocked.down) {
     this.player.setVelocityY(-320);
   } 
-    if (this.physics.collide(this.player, this.Solide_premier_plan))  {
+  if (this.physics.overlap(this.player, this.Solide_premier_plan)) {
+    console.log("niveau 3 : retour vers selection");
+    this.scene.switch("selection");
         this.physics.pause();
         this.player.setTint(0xff0000);
         this.gameOver = true;
