@@ -30,6 +30,7 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   create() {
+    this.porteContactee=true;
     const grossisment =0.7;
     this.player = this.physics.add.sprite(0, 0, 'img_perso');
     this.player.setDepth(100);
@@ -121,9 +122,11 @@ this.text = this.add.text(
     fontWeight: "bold"
   }
 ).setOrigin(0);
+this.porteContactee =false;
 
-this.add.image(3145, 200, "porte_retour").setOrigin(0).setDepth(0).setDisplaySize(30, 50).setPipeline('Light2D');
-      
+this.porte_retour = this.physics.add.staticSprite(3145, 230, "porte_retour").setDisplaySize(30, 50).setPipeline('Light2D');
+
+      this.player.x = 3145;
   }
 
 
@@ -156,7 +159,7 @@ if (this.gameOver) {
   this.player.setPosition(0, 0);
   this.gameOver = false;
   this.vie=this.vie-1;
-  this.text.setText("IL vous reste " + this.vie + " vies");
+  this.text.setText("IL vous reste " + this.vie + " vie(s)");
 }
 
 if (this.vie==0){
@@ -164,18 +167,36 @@ if (this.vie==0){
   this.scene.start("fin")
 }
 
-    if (this.clavier.space.isDown) {
-        if (this.physics.overlap(this.player, this.porte_retour)) {
-            this.scene.start("selection");
-        }
-    }
+  // Déplacements du joueur
+  // ...
 
-    this.light.x = this.player.x;
-    this.light.y = this.player.y;
-    
-    if (this.text) {
-      this.text.x = this.cameras.main.scrollX + 16;
-    this.text.y = this.cameras.main.scrollY + 16;
+  // Gestion des collisions avec les tuiles
+  // ...
+
+  // Si le joueur est en collision avec la porte et a appuyé sur la touche d'espace
+  if (this.clavier.space.isDown && this.physics.overlap(this.player, this.porte_retour)) {
+    // Si la porte n'a pas déjà été contactée
+    if (!this.porteContactee) {
+      // Marquer la porte comme contactée
+      this.porteContactee = true;
+      // Rediriger vers la scène de sélection
+      this.scene.switch("selection");
     }
+  } else {
+    // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
+    this.porteContactee = false;
+  }
+
+  // Mise à jour de la position de la lumière
+  this.light.x = this.player.x;
+  this.light.y = this.player.y;
+  
+  // Mise à jour de la position du texte
+  if (this.text) {
+    this.text.x = this.cameras.main.scrollX + 16;
+    this.text.y = this.cameras.main.scrollY + 16;
+  }
+
+
 }
 }
