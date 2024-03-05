@@ -2,8 +2,6 @@
   export default class selection extends Phaser.Scene {
 
 
-
-
     constructor() {
       super({ key: "selection" });
     }
@@ -61,11 +59,7 @@
       //Cas ou la sourris clique sur le bouton play :
       // on lance le niveau 1
       bouton_play.on("pointerup", () => {
-<<<<<<< HEAD
         this.scene.start("niveau1");
-=======
-        this.scene.start("fin");
->>>>>>> 886a5059bcdc4b04855b98c85d23611581d3f99c
       });
       bouton_settings.on("pointerup", () => {
         this.scene.start("commandes");
@@ -73,3 +67,4 @@
     }
     
   } 
+
