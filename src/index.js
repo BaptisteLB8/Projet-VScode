@@ -1,3 +1,5 @@
+
+
 // chargement des librairies
 import selection from "/src/js/selection.js";
 import niveau1 from "/src/js/niveau1.js";
@@ -24,7 +26,7 @@ var config = {
       gravity: {
         y: 300 // gravité verticale : acceleration ddes corps en pixels par seconde
       },
-      debug: true // permet de voir les hitbox et les vecteurs d'acceleration quand mis à true tg baptiste
+      debug: true // permet de voir les hitbox et les vecteurs d'acceleration quand mis à true tg baptiste 
     }
   },
   scene: [selection, niveau1, niveau2, niveau3,commandes]
