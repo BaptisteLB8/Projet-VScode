@@ -148,6 +148,9 @@ if (this.gameOver) {
   this.vie=this.vie-1;
   this.text.setText("IL vous reste " + this.vie + " vies");
 }
+if (this.vie==0){
+  this.scene.start("fin")
+}
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
         if (this.physics.overlap(this.player, this.porte_retour)) {
