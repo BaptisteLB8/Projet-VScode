@@ -17,8 +17,8 @@ export default class niveau3 extends Phaser.Scene {
     this.load.tilemapTiledJSON("carte","src/assets/map_niveau3.tmj");
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
-      frameWidth: 32,
-      frameHeight: 48
+      frameWidth: 45,
+      frameHeight: 50
     }); 
   }
 
@@ -32,10 +32,11 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setBounce(0.2); 
     this.clavier = this.input.keyboard.createCursorKeys(); 
     
+    
 
     this.anims.create({
       key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
-      frames: this.anims.generateFrameNumbers("img_perso", { start: 1, end: 3 }), // on prend toutes les frames de img perso numerotées de 0 à 3
+      frames: this.anims.generateFrameNumbers("img_perso", { start: 3, end: 5 }), // on prend toutes les frames de img perso numerotées de 0 à 3
       frameRate: 10, // vitesse de défilement des frames
       repeat: -1 // nombre de répétitions de l'animation. -1 = infini
     }); 
@@ -49,7 +50,7 @@ export default class niveau3 extends Phaser.Scene {
   
     this.anims.create({
       key: "anim_face",
-      frames: [{ key: "img_perso", frame: 2 }],
+      frames: [{ key: "img_perso", frame: 1 }],
       frameRate: 20
     }); 
   
@@ -91,6 +92,19 @@ this.cameras.main.setBounds(0, 0, 3600, 768);
 this.cameras.main.startFollow(this.player);
 
 this.groupe_plateformes = this.physics.add.staticGroup();
+player.body.world.on(
+  "worldbounds", // evenement surveillé
+  function (body, up, down, left, right) {
+    // on verifie si la hitbox qui est rentrée en collision est celle du player,
+    // et si la collision a eu lieu sur le bord inférieur du player
+    if (body.gameObject === player && down == true) {
+      // si oui : GAME OVER on arrete la physique et on colorie le personnage en rouge
+      this.physics.pause();
+      player.setTint(0xff0000);
+    }
+  },
+  this
+); 
     
       
   }
