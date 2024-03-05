@@ -8,7 +8,7 @@ export default class fin extends Phaser.Scene {
     });
   }
   preload() {
-this.load.image('livre', 'src/assets/book.png'); 
+this.load.image('over', 'src/assets/GameOver.png'); 
 this.load.image('retour1', 'src/assets/retour.png'); 
 
   }

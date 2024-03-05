@@ -148,7 +148,9 @@ if (this.gameOver) {
   this.vie=this.vie-1;
   this.text.setText("IL vous reste " + this.vie + " vies");
 }
+
 if (this.vie==0){
+  this.vie=3;
   this.scene.start("fin")
 }
 
