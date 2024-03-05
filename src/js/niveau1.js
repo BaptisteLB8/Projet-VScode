@@ -6,6 +6,10 @@ export default class niveau1 extends Phaser.Scene {
     this.player = null;
     this.groupe_plateformes = null;
     this.clavier = null;
+    this.gameOver = null;
+    this.vie = 3;
+    this.text = null;
+    this.grossissement = 0.7; // Nouvelle variable pour le grossissement
   }
 
   preload() {
@@ -15,6 +19,7 @@ export default class niveau1 extends Phaser.Scene {
       frameWidth: 45,
       frameHeight: 50
     });
+    this.load.image("mechant", "src/assets/mechant.png");
   }
 
   create() {
@@ -39,17 +44,17 @@ export default class niveau1 extends Phaser.Scene {
     this.clavier = this.input.keyboard.createCursorKeys();
 
     this.anims.create({
-      key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
-      frames: this.anims.generateFrameNumbers("img_perso", { start: 3, end: 5 }), // on prend toutes les frames de img perso numerotées de 0 à 3
-      frameRate: 10, // vitesse de défilement des frames
-      repeat: -1 // nombre de répétitions de l'animation. -1 = infini
+      key: "anim_tourne_gauche",
+      frames: this.anims.generateFrameNumbers("img_perso", { start: 3, end: 5 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key: "anim_tourne_droite", // key est le nom de l'animation : doit etre unique poru la scene.
-      frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 8 }), // on prend toutes les frames de img perso numerotées de 0 à 3
-      frameRate: 10, // vitesse de défilement des frames
-      repeat: -1 // nombre de répétitions de l'animation. -1 = infini
+      key: "anim_tourne_droite",
+      frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 8 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
@@ -58,14 +63,50 @@ export default class niveau1 extends Phaser.Scene {
       frameRate: 20
     });
 
-    this.physics.world.setBounds(0, 0, 1610, 320);
-    this.cameras.main.setBounds(0, -145, 1600, 320);
+    this.physics.world.setBounds(0, 0, 1620, 325);
+    this.cameras.main.setBounds(0, -145, 1600, 325);
     this.cameras.main.startFollow(this.player);
 
     this.groupe_plateformes = this.physics.add.staticGroup();
+
+    // Affichage du nombre de vies
+    this.text = this.add.text(
+      16,
+      16,
+      "Il vous reste " + this.vie + " vies",
+      {
+        fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+        fontSize: "22pt",
+        fontWeight: "bold"
+      }
+    ).setOrigin(0);
+
+    // Ajout de l'écouteur pour les collisions avec les bords du monde
+    this.player.body.onWorldBounds = true;
+    this.player.body.world.on(
+      "worldbounds",
+      function (body, up, down, left, right) {
+        if (body.gameObject === this.player && down == true) {
+          this.physics.pause();
+          this.player.setTint(0xff0000);
+          this.gameOver = true;
+        } else if (body.gameObject === this.player && (left || right)) {
+          return;
+        }
+      },
+      this
+    );
+
+    // Appliquer le grossissement au joueur
+    this.player.setScale(this.grossissement);
+
+    // Définir le joueur avec le pipeline Light2D
+    this.player.setPipeline('Light2D');
   }
 
+
   update() {
+    // Gestion des mouvements du joueur
     if (this.clavier.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play('anim_tourne_droite', true);
@@ -80,11 +121,17 @@ export default class niveau1 extends Phaser.Scene {
       this.player.setVelocityY(-320);
     }
 
-    if (Phaser.Input.Keyboard.JustDown(this.clavier.space)) {
-      // Assurez-vous que this.porte_retour est correctement initialisé
-      if (this.physics.overlap(this.player, this.porte_retour)) {
-        console.log("niveau 3 : retour vers selection");
-        this.scene.switch("selection");
+    // Gestion du game over
+    if (this.gameOver) {
+      this.vie--;
+      this.text.setText("Il vous reste " + this.vie + " vies");
+      if (this.vie <= 0) {
+        this.scene.start("fin");
+      } else {
+        this.player.setPosition(0, 0);
+        this.physics.resume();
+        this.player.clearTint();
+        this.gameOver = false;
       }
     }
   }

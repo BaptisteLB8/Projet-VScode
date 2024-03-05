@@ -50,7 +50,7 @@
       //Cas ou la sourris clique sur le bouton play :
       // on lance le niveau 1
       bouton_play.on("pointerup", () => {
-        this.scene.start("niveau3");
+        this.scene.start("niveau1");
       });
       //bouton_settings.on("pointerup", () => {
         //this.scene.start("commandes");
