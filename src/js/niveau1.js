@@ -36,11 +36,14 @@ export default class niveau1 extends Phaser.Scene {
     calque_plateformes.setCollisionByProperty({ estSolide: true });
     calque_objets.setCollisionByProperty({ estSolide: false });
     calque_background.setCollisionByProperty({ estSolide: false });
+
+    const grossisment =0.7;
     this.player = this.physics.add.sprite(0, 0, 'img_perso');
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, calque_plateformes);
     this.player.setBounce(0.2);
+    this.player.setScale(grossisment);
     this.clavier = this.input.keyboard.createCursorKeys();
 
     this.anims.create({
@@ -89,24 +92,17 @@ export default class niveau1 extends Phaser.Scene {
         if (body.gameObject === this.player && down == true) {
           this.physics.pause();
           this.player.setTint(0xff0000);
-          this.gameOver = true;
+          this.gameOver = true; // Déclenche le game over
         } else if (body.gameObject === this.player && (left || right)) {
           return;
         }
       },
       this
     );
-
-    // Appliquer le grossissement au joueur
-    this.player.setScale(this.grossissement);
-
-    // Définir le joueur avec le pipeline Light2D
-    this.player.setPipeline('Light2D');
   }
 
 
   update() {
-    // Gestion des mouvements du joueur
     if (this.clavier.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play('anim_tourne_droite', true);
@@ -121,17 +117,21 @@ export default class niveau1 extends Phaser.Scene {
       this.player.setVelocityY(-320);
     }
 
-    // Gestion du game over
     if (this.gameOver) {
-      this.vie--;
-      this.text.setText("Il vous reste " + this.vie + " vies");
-      if (this.vie <= 0) {
-        this.scene.start("fin");
+      this.vie--; // Décrémentez le nombre de vies
+      this.text.setText("Il vous reste " + this.vie + " vies"); // Mettez à jour le texte affichant le nombre de vies
+      if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
+        this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
+
+        if (this.vie==0){
+          this.vie=4;
+          this.scene.start("fin")
+        }
       } else {
-        this.player.setPosition(0, 0);
-        this.physics.resume();
-        this.player.clearTint();
-        this.gameOver = false;
+        this.player.setPosition(0, 0); // Réinitialisez la position du joueur
+        this.physics.resume(); // Reprenez la simulation physique
+        this.player.clearTint(); // Effacez la couleur rouge
+        this.gameOver = false; // Réinitialisez la variable gameOver
       }
     }
   }
