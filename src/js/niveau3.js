@@ -1,4 +1,3 @@
-
 export default class niveau3 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -8,6 +7,7 @@ export default class niveau3 extends Phaser.Scene {
     this.player = null;
     this.groupe_plateformes = null;
     this.clavier = null;
+    this.light = null; 
   }
     
   preload() {
@@ -16,7 +16,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image("tuilesdejeu3","src/assets/nuit.jpg")
     this.load.tilemapTiledJSON("carte","src/assets/map_niveau3.tmj");
 
-    this.load.spritesheet("img_perso", "src/assets/dude.png", {
+    this.load.spritesheet('img_perso', 'src/assets/dude.png', {
       frameWidth: 32,
       frameHeight: 48
     }); 
@@ -31,7 +31,7 @@ export default class niveau3 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.groupe_plateformes); 
     this.player.setBounce(0.2); 
     this.clavier = this.input.keyboard.createCursorKeys(); 
-    
+    this.player.setPipeline('Light2D');
 
     this.anims.create({
       key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
@@ -67,7 +67,6 @@ export default class niveau3 extends Phaser.Scene {
     const Decoration = map.createLayer("Decoration", [ts1, ts2, ts3]);
     
 
-
 Transparent_solide.setCollisionByProperty({ estSolide: true }); 
 Pas_solide.setCollisionByProperty({ estSolide: false }); 
 Solide_premier_plan.setCollisionByProperty({ estSolide : true});
@@ -76,12 +75,10 @@ Background.setCollisionByProperty({ estSolide : false});
 Sol.setCollisionByProperty({ estSolide : true});
 
 
-
 // ajout d'une collision entre le joueur et le calque plateformes
 this.physics.add.collider(this.player, Solide_premier_plan ); 
 this.physics.add.collider(this.player, Transparent_solide ); 
 this.physics.add.collider(this.player, Sol ); 
-
 
 // redimentionnement du monde avec les dimensions calculées via tiled
 this.physics.world.setBounds(0, 0, 3600, 768);
@@ -91,31 +88,44 @@ this.cameras.main.setBounds(0, 0, 3600, 768);
 this.cameras.main.startFollow(this.player);
 
 this.groupe_plateformes = this.physics.add.staticGroup();
-    
+this.light = this.lights.addLight(600, 300, 300);
+this.light.setIntensity(2); 
+this.light.setRadius(700);
+this.lights.enable().setAmbientColor(0x000000);
+
+Background.setPipeline('Light2D');
+Transparent_solide.setPipeline('Light2D');
+Decoration.setPipeline('Light2D');
+Sol.setPipeline('Light2D');
+Solide_premier_plan.setPipeline('Light2D');   
+Pas_solide.setPipeline('Light2D');  
       
   }
 
   update() {
     if (this.clavier.right.isDown) {
-    this.player.setVelocityX(160);
-    this.player.anims.play('anim_tourne_droite', true); 
-  } 
-  else if ( this.clavier.left.isDown) {
-    this.player.setVelocityX(-160);
-    this.player.anims.play('anim_tourne_gauche', true); 
-  } else {
-    this.player.setVelocityX(0);
-    this.player.anims.play('anim_face', true)
-  } 
-  if (this.clavier.up.isDown && this.player.body.blocked.down) {
-    this.player.setVelocityY(-320);
-  }  
+        this.player.setVelocityX(160);
+        this.player.anims.play('anim_tourne_droite', true);  // Utilisez 'anim_tourne_droite' pour les mouvements vers la droite
+    } else if (this.clavier.left.isDown) {
+        this.player.setVelocityX(-160);
+        this.player.anims.play('anim_tourne_gauche', true);  // Utilisez 'anim_tourne_gauche' pour les mouvements vers la gauche
+    } else {
+        this.player.setVelocityX(0);
+        this.player.anims.play('anim_face', true);
+    } 
+
+    if (this.clavier.up.isDown && this.player.body.blocked.down) {
+        this.player.setVelocityY(-320);
+    }  
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
-      if (this.physics.overlap(this.player, this.porte_retour)) {
-        console.log("niveau 3 : retour vers selection");
-        this.scene.switch("selection");
-      }
+        if (this.physics.overlap(this.player, this.porte_retour)) {
+            console.log("niveau 3 : retour vers selection");
+            this.scene.switch("selection");
+        }
     }
-  }
+
+    this.light.x = this.player.x;
+    this.light.y = this.player.y;
+}
 }
