@@ -19,6 +19,8 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image("tuilesdejeu2", "src/assets/ground.png")
     this.load.image("tuilesdejeu3", "src/assets/nuit.jpg")
     this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
+    this.load.image('soundon', 'src/assets/SoundOn.png'); 
+    this.load.image('soundoff', 'src/assets/SoundOff.png'); 
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -27,13 +29,14 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   create() {
-    
+    const grossisment =0.7;
     this.player = this.physics.add.sprite(0, 0, 'img_perso');
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
     this.physics.add.collider(this.player, this.groupe_plateformes); 
     this.physics.world.setBounds(-50,0, 2800, 1000);
     this.player.setBounce(0.2); 
+    this.player.setScale(grossisment);
     this.clavier = this.input.keyboard.createCursorKeys(); 
     this.player.setPipeline('Light2D');
 
@@ -85,7 +88,7 @@ this.physics.add.collider(this.player, Transparent_solide );
 this.physics.add.collider(this.player, Sol ); 
 
     // redimentionnement du monde avec les dimensions calculées via tiled
-    this.physics.world.setBounds(0, 0, 3600, 768);
+    this.physics.world.setBounds(0, 0, 3200, 768);
     //  ajout du champs de la caméra de taille identique à celle du monde
     this.cameras.main.setBounds(0, 0, 3600, 768);
     // ancrage de la caméra sur le joueur
@@ -116,6 +119,8 @@ this.text = this.add.text(
     fontWeight: "bold"
   }
 ).setOrigin(0);
+
+
       
   }
 
