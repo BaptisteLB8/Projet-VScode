@@ -8,6 +8,7 @@ export default class niveau3 extends Phaser.Scene {
     this.player = null;
     this.groupe_plateformes = null;
     this.clavier = null;
+    this.gameOver=null;
   }
     
   preload() {
@@ -25,7 +26,7 @@ export default class niveau3 extends Phaser.Scene {
   create() {
     
 
-    this.player = this.physics.add.sprite(100, 450, 'img_perso'); 
+    this.player = this.physics.add.sprite(0, 0, 'img_perso'); 
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
     this.physics.add.collider(this.player, this.groupe_plateformes); 
@@ -92,8 +93,10 @@ this.cameras.main.setBounds(0, 0, 3600, 768);
 this.cameras.main.startFollow(this.player);
 
 this.groupe_plateformes = this.physics.add.staticGroup();
-player.body.world.on(
-  "worldbounds", // evenement surveillé
+
+    
+      
+  }
   function (body, up, down, left, right) {
     // on verifie si la hitbox qui est rentrée en collision est celle du player,
     // et si la collision a eu lieu sur le bord inférieur du player
@@ -101,13 +104,11 @@ player.body.world.on(
       // si oui : GAME OVER on arrete la physique et on colorie le personnage en rouge
       this.physics.pause();
       player.setTint(0xff0000);
+      this.gameOver=true;
     }
-  },
-  this
-); 
-    
-      
   }
+
+
 
   update() {
     if (this.clavier.right.isDown) {
@@ -123,7 +124,10 @@ player.body.world.on(
   } 
   if (this.clavier.up.isDown && this.player.body.blocked.down) {
     this.player.setVelocityY(-320);
-  }  
+  } 
+  if (this.gameOver==true){
+    this.scene.switch("niveau3");
+  } 
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
