@@ -9,9 +9,11 @@ export default class niveau1 extends Phaser.Scene {
     this.gameOver = null;
     this.vie = 3;
     this.text = null;
-    this.grossissement = 0.7; // Nouvelle variable pour le grossissement
+    this.grossissement = 0.7;
+    this.levier = null; 
+    this.tween_mouvement = null;
+    this.bloquage=true;
   }
-
   preload() {
     this.load.image("Phaser_tuilesdejeu", "src/assets/Tuile.png");
     this.load.tilemapTiledJSON("cartes", "src/assets/Mapforet.json");
@@ -20,6 +22,10 @@ export default class niveau1 extends Phaser.Scene {
       frameHeight: 50
     });
     this.load.image("mechant", "src/assets/mechant.png");
+    this.load.image('porte', 'src/assets/door3.png');
+    this.load.image('caillou', 'src/assets/cayu2.png');
+    this.load.image("img_levier", "src/assets/levier.png");
+
   }
 
   create() {
@@ -76,7 +82,7 @@ export default class niveau1 extends Phaser.Scene {
     this.text = this.add.text(
       16,
       16,
-      "Il vous reste " + this.vie + " vies",
+      "Il vous reste " + this.vie + " vie(s)",
       {
         fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
         fontSize: "22pt",
@@ -99,6 +105,33 @@ export default class niveau1 extends Phaser.Scene {
       },
       this
     );
+
+    this.porteContactee =false;
+
+    this.porte_retour = this.physics.add.staticSprite(993, 105, "porte").setDisplaySize(30, 50);
+    var caillou_mobile = this.physics.add.sprite(
+      993,
+      100,
+      "caillou"
+    ); 
+    caillou_mobile.setScale(0.15);
+    caillou_mobile.body.allowGravity = false;
+    caillou_mobile.body.immovable = true; 
+    this.tween_mouvement = this.tweens.add({
+      targets: [caillou_mobile],  // on applique le tween sur platefprme_mobile
+      paused: true, // de base le tween est en pause
+      ease: "Linear",  // concerne la vitesse de mouvement : linéaire ici 
+      duration: 2000,  // durée de l'animation pour monter 
+      yoyo: false,   // mode yoyo : une fois terminé on "rembobine" le déplacement 
+      y: "-=300",   // on va déplacer la plateforme de 300 pixel vers le haut par rapport a sa position
+      delay: -1,     // délai avant le début du tween une fois ce dernier activé
+      hold: 10000000,   // délai avant le yoyo : temps qeu al plate-forme reste en haut
+      repeatDelay: -1, // deléi avant la répétition : temps que la plate-forme reste en bas
+      repeat: 0 // répétition infinie 
+    });
+    this.levier = this.physics.add.staticSprite(1550, 270, "img_levier").setScale(0.6);
+    this.levier.active = false;
+
   }
 
 
@@ -114,12 +147,12 @@ export default class niveau1 extends Phaser.Scene {
       this.player.anims.play('anim_face', true)
     }
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
-      this.player.setVelocityY(-320);
+      this.player.setVelocityY(-250);
     }
 
     if (this.gameOver) {
       this.vie--; // Décrémentez le nombre de vies
-      this.text.setText("Il vous reste " + this.vie + " vies"); // Mettez à jour le texte affichant le nombre de vies
+      this.text.setText("Il vous reste " + this.vie + " vie(s)"); // Mettez à jour le texte affichant le nombre de vies
       if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
         this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
 
@@ -134,5 +167,36 @@ export default class niveau1 extends Phaser.Scene {
         this.gameOver = false; // Réinitialisez la variable gameOver
       }
     }
+
+    if (this.clavier.space.isDown && this.physics.overlap(this.player, this.porte_retour)) {
+      if (this.bloquage==false){
+      // Si la porte n'a pas déjà été contactée
+      if (!this.porteContactee) {
+        // Marquer la porte comme contactée
+        this.porteContactee = true;
+        // Rediriger vers la scène de sélection
+        this.scene.switch("selection");
+      }
+    }
+    } else {
+      // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
+      this.porteContactee = false;
+    }
+    if (this.clavier.space.isDown && this.physics.overlap(this.player, this.levier)) {
+      // Si la touche d'espace est enfoncée et que le joueur est en collision avec le levier
+      // Activer le levier et déclencher l'action du caillou mobile
+      this.levier.active = true;
+        this.levier.flipX = true; // on tourne l'image du levier
+        this.tween_mouvement.resume();  // on relance le tween
+        this.bloquage=false;
+      
+    } 
+    if (this.text) {
+      this.text.x = this.cameras.main.scrollX + 16;
+      this.text.y = this.cameras.main.scrollY + 150;
+    }
+  
+
+
   }
 }
