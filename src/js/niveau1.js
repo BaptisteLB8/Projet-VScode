@@ -11,9 +11,9 @@ export default class niveau1 extends Phaser.Scene {
   preload() {
     this.load.image("Phaser_tuilesdejeu", "src/assets/Tuile.png");
     this.load.tilemapTiledJSON("cartes", "src/assets/Mapforet.json");
-    this.load.spritesheet("img_perso", "src/assets/dude.png", {
-      frameWidth: 32,
-      frameHeight: 48
+    this.load.spritesheet("img_perso", "src/assets/farmer.png", {
+      frameWidth: 45,
+      frameHeight: 50
     });
   }
 
@@ -39,22 +39,22 @@ export default class niveau1 extends Phaser.Scene {
     this.clavier = this.input.keyboard.createCursorKeys();
 
     this.anims.create({
-      key: "anim_tourne_gauche",
-      frames: this.anims.generateFrameNumbers("img_perso", { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
+      key: "anim_tourne_gauche", // key est le nom de l'animation : doit etre unique poru la scene.
+      frames: this.anims.generateFrameNumbers("img_perso", { start: 3, end: 5 }), // on prend toutes les frames de img perso numerotées de 0 à 3
+      frameRate: 10, // vitesse de défilement des frames
+      repeat: -1 // nombre de répétitions de l'animation. -1 = infini
     });
 
     this.anims.create({
-      key: "anim_tourne_droite",
-      frames: this.anims.generateFrameNumbers("img_perso", { start: 5, end: 8 }),
-      frameRate: 10,
-      repeat: -1
+      key: "anim_tourne_droite", // key est le nom de l'animation : doit etre unique poru la scene.
+      frames: this.anims.generateFrameNumbers("img_perso", { start: 6, end: 8 }), // on prend toutes les frames de img perso numerotées de 0 à 3
+      frameRate: 10, // vitesse de défilement des frames
+      repeat: -1 // nombre de répétitions de l'animation. -1 = infini
     });
 
-    this.anims.create({ 
+    this.anims.create({
       key: "anim_face",
-      frames: [{ key: "img_perso", frame: 4 }],
+      frames: [{ key: "img_perso", frame: 1 }],
       frameRate: 20
     });
 
