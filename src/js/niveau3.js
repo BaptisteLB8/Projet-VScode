@@ -30,6 +30,7 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
     this.physics.add.collider(this.player, this.groupe_plateformes); 
+    this.physics.world.setBounds(-50,0, 2800, 1000);
     this.player.setBounce(0.2); 
     this.clavier = this.input.keyboard.createCursorKeys(); 
     this.player.setPipeline('Light2D');
@@ -102,16 +103,6 @@ Solide_premier_plan.setPipeline('Light2D');
 Pas_solide.setPipeline('Light2D');  
       
   }
-  function (body, up, down, left, right) {
-    // on verifie si la hitbox qui est rentrée en collision est celle du player,
-    // et si la collision a eu lieu sur le bord inférieur du player
-    if (body.gameObject === player && down == true) {
-      // si oui : GAME OVER on arrete la physique et on colorie le personnage en rouge
-      this.physics.pause();
-      player.setTint(0xff0000);
-      this.gameOver=true;
-    }
-  }
 
 
 
@@ -130,8 +121,19 @@ Pas_solide.setPipeline('Light2D');
   if (this.clavier.up.isDown && this.player.body.blocked.down) {
     this.player.setVelocityY(-320);
   } 
+  if (this.physics.overlap(this.player, this.Solide_premier_plan)) {
+    console.log("niveau 3 : retour vers selection");
+    this.scene.switch("selection");
+        this.physics.pause();
+        this.player.setTint(0xff0000);
+        this.gameOver = true;
+    }
+
+    // Autres logiques de mise à jour...
+
+
   if (this.gameOver==true){
-    this.scene.switch("niveau3");
+    this.scene.start("selection");
   } 
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
