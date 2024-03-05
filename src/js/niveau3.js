@@ -92,6 +92,7 @@ this.physics.add.collider(this.player, Sol );
     this.cameras.main.startFollow(this.player);
 
 this.groupe_plateformes = this.physics.add.staticGroup();
+
 this.light = this.lights.addLight(600, 300, 300);
 this.light.setIntensity(2); 
 this.light.setRadius(700);
@@ -102,7 +103,9 @@ Transparent_solide.setPipeline('Light2D');
 Decoration.setPipeline('Light2D');
 Sol.setPipeline('Light2D');
 this.Solide_premier_plan.setPipeline('Light2D');   
-Pas_solide.setPipeline('Light2D');  
+Pas_solide.setPipeline('Light2D'); 
+
+
 this.text = this.add.text(
   16, // Coordonnée X par rapport à la caméra
   16, // Coordonnée Y par rapport à la caméra
@@ -163,6 +166,7 @@ if (this.vie==0){
 
     this.light.x = this.player.x;
     this.light.y = this.player.y;
+    
     if (this.text) {
       this.text.x = this.cameras.main.scrollX + 16;
     this.text.y = this.cameras.main.scrollY + 16;
