@@ -10,6 +10,8 @@ export default class niveau3 extends Phaser.Scene {
     this.gameOver=null;
     this.light = null; 
     this.vie=3;
+    this.zone_texte_score;
+    this.text=null;
   }
 
   preload() {
@@ -25,8 +27,7 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   create() {
-
-
+    
     this.player = this.physics.add.sprite(0, 0, 'img_perso');
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
@@ -102,6 +103,16 @@ Decoration.setPipeline('Light2D');
 Sol.setPipeline('Light2D');
 this.Solide_premier_plan.setPipeline('Light2D');   
 Pas_solide.setPipeline('Light2D');  
+this.text = this.add.text(
+  16, // Coordonnée X par rapport à la caméra
+  16, // Coordonnée Y par rapport à la caméra
+  "IL vous reste " + this.vie + " vies",
+  {
+    fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+    fontSize: "22pt",
+    fontWeight: "bold"
+  }
+).setOrigin(0);
       
   }
 
@@ -126,7 +137,7 @@ Pas_solide.setPipeline('Light2D');
 if (this.player.body.blocked.down) {
     var t = this.Solide_premier_plan.getTileAtWorldXY(this.player.x, this.player.y+30);
     if (t!=null && t.index == 396) this.gameOver=true;
-    if (t!=null && t.index == 395) this.gameOver=true;
+    if (t!=null && t.index == 397) this.gameOver=true;
 }
 
 
@@ -134,7 +145,8 @@ if (this.player.body.blocked.down) {
 if (this.gameOver) {
   this.player.setPosition(0, 0);
   this.gameOver = false;
-  this.vie=(this.vie)-1;
+  this.vie=this.vie-1;
+  this.text.setText("IL vous reste " + this.vie + " vies");
 }
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
@@ -146,5 +158,9 @@ if (this.gameOver) {
 
     this.light.x = this.player.x;
     this.light.y = this.player.y;
+    if (this.text) {
+      this.text.x = this.cameras.main.scrollX + 16;
+    this.text.y = this.cameras.main.scrollY + 16;
+    }
 }
 }
