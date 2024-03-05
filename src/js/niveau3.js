@@ -9,6 +9,7 @@ export default class niveau3 extends Phaser.Scene {
     this.clavier = null;
     this.gameOver=null;
     this.light = null; 
+    this.vie=3;
   }
 
   preload() {
@@ -130,9 +131,11 @@ if (this.player.body.blocked.down) {
 
 
 
-    if (this.gameOver == true) {
-      this.scene.start("niveau3");
-    }
+if (this.gameOver) {
+  this.player.setPosition(0, 0);
+  this.gameOver = false;
+  this.vie=(this.vie)-1;
+}
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
         if (this.physics.overlap(this.player, this.porte_retour)) {
