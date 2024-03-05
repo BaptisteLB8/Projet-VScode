@@ -97,16 +97,6 @@ this.groupe_plateformes = this.physics.add.staticGroup();
     
       
   }
-  function (body, up, down, left, right) {
-    // on verifie si la hitbox qui est rentrée en collision est celle du player,
-    // et si la collision a eu lieu sur le bord inférieur du player
-    if (body.gameObject === player && down == true) {
-      // si oui : GAME OVER on arrete la physique et on colorie le personnage en rouge
-      this.physics.pause();
-      player.setTint(0xff0000);
-      this.gameOver=true;
-    }
-  }
 
 
 
@@ -125,8 +115,17 @@ this.groupe_plateformes = this.physics.add.staticGroup();
   if (this.clavier.up.isDown && this.player.body.blocked.down) {
     this.player.setVelocityY(-320);
   } 
+    if (this.physics.collide(this.player, this.Solide_premier_plan))  {
+        this.physics.pause();
+        this.player.setTint(0xff0000);
+        this.gameOver = true;
+    }
+
+    // Autres logiques de mise à jour...
+
+
   if (this.gameOver==true){
-    this.scene.switch("niveau3");
+    this.scene.start("selection");
   } 
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
