@@ -9,7 +9,8 @@ export default class niveau3 extends Phaser.Scene {
   preload() {
     this.load.image("Phaser_tuilesdejeu","src/assets/tuiles.png")
     this.load.image("Phaser_tuilesdejeu2","src/assets/ground.png")
-    this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
+    this.load.image("Phaser_tuilesdejeu3","src/assets/nuit.jpg")
+    this.load.tilemapTiledJSON("carte","src/assets/map_niveau3.tmj");
   }
 
   create() {
@@ -17,13 +18,21 @@ export default class niveau3 extends Phaser.Scene {
     const carteDuNiveau = this.add.tilemap("carte");
 
     const tileset = carteDuNiveau.addTilesetImage(
-      "tuiles_de_jeu",
+      "tuiles",
       "Phaser_tuilesdejeu"
+      
     );  
-    
+
     const tileset2 = carteDuNiveau.addTilesetImage(
-      "tuiles_de_jeu2",
+      "ground",
       "Phaser_tuilesdejeu2"
+      
+    );  
+
+    const tileset3 = carteDuNiveau.addTilesetImage(
+      "nuit",
+      "Phaser_tuilesdejeu3"
+      
     );  
   
     // chargement du calque calque_background
@@ -44,21 +53,21 @@ const Solide_premier_plan = carteDuNiveau.createLayer(
   tileset
 );  
 // chargement du calque calque_background_2
-const Décoration = carteDuNiveau.createLayer(
-  "Décoration",
+const Decoration = carteDuNiveau.createLayer(
+  "Decoration",
   tileset
 );
 
 // chargement du calque calque_plateformes
 const Background = carteDuNiveau.createLayer(
   "Background",
-  tileset
+  tileset3
 );  
 
 Transparent_solide.setCollisionByProperty({ estSolide: true }); 
 Pas_solide.setCollisionByProperty({ estSolide: false }); 
 Solide_premier_plan.setCollisionByProperty({ estSolide : true});
-Décoration.setCollisionByProperty({ estSolide : false});
+Decoration.setCollisionByProperty({ estSolide : false});
 Background.setCollisionByProperty({ estSolide : false});
 
 
