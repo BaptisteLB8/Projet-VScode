@@ -12,6 +12,7 @@ export default class niveau3 extends Phaser.Scene {
     this.vie=3;
     this.zone_texte_score;
     this.text=null;
+    this.porteContactee = false;
   }
 
   preload() {
@@ -121,9 +122,11 @@ this.text = this.add.text(
     fontWeight: "bold"
   }
 ).setOrigin(0);
+this.porteContactee =false;
 
-this.add.image(3145, 200, "porte_retour").setOrigin(0).setDepth(0).setDisplaySize(30, 50).setPipeline('Light2D');
-      
+this.porte_retour = this.physics.add.staticSprite(3145, 230, "porte_retour").setDisplaySize(30, 50).setPipeline('Light2D');
+
+      this.player.x = 3145;
   }
 
 
@@ -156,7 +159,7 @@ if (this.gameOver) {
   this.player.setPosition(0, 0);
   this.gameOver = false;
   this.vie=this.vie-1;
-  this.text.setText("IL vous reste " + this.vie + " vies");
+  this.text.setText("IL vous reste " + this.vie + " vie(s)");
 }
 
 if (this.vie==0){
@@ -164,11 +167,15 @@ if (this.vie==0){
   this.scene.start("fin")
 }
 
-    if (this.clavier.space.isDown) {
-        if (this.physics.overlap(this.player, this.porte_retour)) {
-            this.scene.start("selection");
-        }
-    }
+if (this.clavier.space.isDown && !this.porteContactee) {
+  if (this.physics.overlap(this.player, this.porte_retour)) {
+      this.scene.start("selection");
+      this.porteContactee = true; // Marque la porte comme contactée
+  }
+}
+if (!this.physics.overlap(this.player, this.porte_retour)) {
+  this.porteContactee = false;
+}
 
     this.light.x = this.player.x;
     this.light.y = this.player.y;
