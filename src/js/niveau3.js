@@ -122,7 +122,7 @@ this.text = this.add.text(
     fontSize: "22pt",
     fontWeight: "bold"
   }
-).setOrigin(0);
+).setOrigin(0).setScrollFactor(0);
 this.porteContactee =false;
 
 this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDisplaySize(30, 50).setPipeline('Light2D');
@@ -132,9 +132,23 @@ this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDispla
     this.music = this.sound.add('bgniveau3');
     this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
 
-    this.bouton_SoundOn = this.add.image(750, 50, "soundon2").setDepth(7).setDisplaySize(30, 35);
+
+    this.bouton_SoundOn = this.add.image(750, 35, "soundon2").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_SoundOn.setInteractive();
     this.music.play();
+    this.musicPlaying=true;
+
+    this.bouton_SoundOn.on("pointerup", () => {
+      if (this.musicPlaying) {
+          this.music.stop(); // Arrêter la musique
+          this.bouton_SoundOn.setTexture("soundoff2").setDisplaySize(40, 40); // Changer le bouton en Sound Off
+          this.musicPlaying = false; // Mettre à jour le statut de la musique
+      } else {
+          this.music.play(); // Reprendre la musique
+          this.bouton_SoundOn.setTexture("soundon2").setDisplaySize(60, 45); // Changer le bouton en Sound On
+          this.musicPlaying = true; // Mettre à jour le statut de la musique
+      }
+  });
 
 
   }
@@ -202,26 +216,8 @@ if (this.vie==0){
   this.light.y = this.player.y;
   
   // Mise à jour de la position du texte
-  if (this.text) {
-    this.text.x = this.cameras.main.scrollX + 16;
-    this.text.y = this.cameras.main.scrollY + 16;
-  }
+ 
 
-  this.bouton_SoundOn.x = this.cameras.main.scrollX + 750;
-  this.bouton_SoundOn.y = this.cameras.main.scrollY + 50;
-
-  // Gestion de l'événement pointerup sur le bouton SoundOn
-  this.bouton_SoundOn.on("pointerup", () => {
-      if (this.musicPlaying) {
-          this.music.stop(); // Arrêter la musique
-          this.bouton_SoundOn.setTexture("soundoff2").setDisplaySize(30, 30); // Changer le bouton en Sound Off
-          this.musicPlaying = false; // Mettre à jour le statut de la musique
-      } else {
-          this.music.play(); // Reprendre la musique
-          this.bouton_SoundOn.setTexture("soundon2").setDisplaySize(30, 35); // Changer le bouton en Sound On
-          this.musicPlaying = true; // Mettre à jour le statut de la musique
-      }
-  });
 
 }
 }
