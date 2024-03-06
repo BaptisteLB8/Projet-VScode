@@ -26,6 +26,10 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("img_levier", "src/assets/levier.png");
     this.load.image("bullet", "src/assets/fleche.png"); 
     this.load.image("mzelda", "src/assets/mzelda.png");  
+    this.load.audio('bgniveau1', 'src/assets/niveau1.mp3');
+    this.load.image('soundon1', 'src/assets/SoundOn2.png'); 
+    this.load.image('soundoff1', 'src/assets/SoundOff2.png'); 
+    this.load.image('clue1', 'src/assets/indice.png'); 
 
   }
 
@@ -102,14 +106,14 @@ export default class niveau1 extends Phaser.Scene {
     // Affichage du nombre de vies
     this.text = this.add.text(
       16,
-      16,
+      160,
       "Il vous reste " + this.vie + " vie(s)",
       {
         fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
         fontSize: "22pt",
         fontWeight: "bold"
       }
-    ).setOrigin(0);
+    ).setOrigin(0).setScrollFactor(0);
 
     // Ajout de l'écouteur pour les collisions avec les bords du monde
     this.player.body.onWorldBounds = true;
@@ -161,6 +165,26 @@ this.physics.add.collider(this.groupeBullets, calque_plateformes, function(bulle
   bullet.destroy(); // Détruisez la balle lorsqu'elle entre en collision avec une plateforme
 });
 this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda, null, this);
+
+this.music = this.sound.add('bgniveau1');
+
+    this.bouton_SoundOn1 = this.add.image(750, 180, "soundon1").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_SoundOn1.setInteractive();
+    this.music.play();
+    this.musicPlaying=true;
+
+    this.bouton_SoundOn1.on("pointerup", () => {
+      if (this.musicPlaying) {
+          this.music.stop(); // Arrêter la musique
+          this.bouton_SoundOn1.setTexture("soundoff1").setDisplaySize(40, 40); // Changer le bouton en Sound Off
+          this.musicPlaying = false; // Mettre à jour le statut de la musique
+      } else {
+          this.music.play(); // Reprendre la musique
+          this.bouton_SoundOn1.setTexture("soundon1").setDisplaySize(60, 45); // Changer le bouton en Sound On
+          this.musicPlaying = true; // Mettre à jour le statut de la musique
+      }
+  });
+
   }
 
 
@@ -222,6 +246,7 @@ this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda
         // Rediriger vers la scène de sélection
         this.scene.switch("niveau3");
         this.affichage=1;
+        this.music.stop();
       }
     }
     } else {
@@ -237,10 +262,7 @@ this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda
         this.bloquage=false;
       
     } 
-    if (this.text) {
-      this.text.x = this.cameras.main.scrollX + 16;
-      this.text.y = this.cameras.main.scrollY + 150;
-    }
+
 // A l'intérieur de la méthode update()
 if (Phaser.Input.Keyboard.JustDown(this.fleche)) { // Correction: utilisez this.fleche
   this.tirer(this.player); // Correction: utilisez this.tirer
@@ -275,6 +297,9 @@ chocAvecmzelda(player, mzelda){
 collisionFlecheMzelda(bullet, mzelda) {
   bullet.destroy(); // Détruisez la flèche
   mzelda.destroy(); // Détruisez Mzelda
+
+
+  
 }
 
 }
