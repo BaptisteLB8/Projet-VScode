@@ -205,6 +205,7 @@ this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda
         this.porteContactee = true;
         // Rediriger vers la scène de sélection
         this.scene.switch("niveau3");
+        this.affichage=1;
       }
     }
     } else {

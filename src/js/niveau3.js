@@ -116,7 +116,7 @@ Pas_solide.setPipeline('Light2D');
 this.text = this.add.text(
   16, // Coordonnée X par rapport à la caméra
   16, // Coordonnée Y par rapport à la caméra
-  "IL vous reste " + this.vie + " vies",
+  "IL vous reste " + this.vie + " vie(s)",
   {
     fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
     fontSize: "22pt",
