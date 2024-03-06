@@ -157,14 +157,21 @@ this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDispla
       }
   });
 
-    this.rocher = this.physics.add.sprite(2200, 100, 'rocher');
+    this.rocher = this.physics.add.image(2190, 100, 'rocher');
     this.rocher.setCollideWorldBounds(true);
     this.rocher.setInteractive(); // Rend le rocher interactif pour le déplacement
     this.physics.add.collider(this.rocher, this.Sol); // Ajoutez une collision avec les plateformes
     this.physics.add.collider(this.rocher, this.Solide_premier_plan);
     this.physics.add.collider(this.rocher, this.player); // Ajoutez une collision avec les plateformes
     this.rocher.setScale(0.1);
-    this.rocher.setMass(250); // Vous pouvez ajuster le nombre selon vos besoins
+    //this.rocher.setAcceleration(0);
+    this.rocher.setMass(1);
+    this.rocher.setFrictionX(0.5);
+
+    this.rocher.setPushable(true); // Vous pouvez ajuster le nombre selon vos besoins
+    this.rocher.body.maxVelocity.x = 0.1;
+    //this.rocher.body.setImmovable (true);
+    
     this.physics.add.collider(this.rocher, this.groupe_plateformes, null, null, this);
 
 
@@ -175,7 +182,12 @@ this.physics.add.collider(this.deuxiemeRocher, this.Sol); // Ajoutez une collisi
 this.physics.add.collider(this.deuxiemeRocher, this.Solide_premier_plan);
 this.physics.add.collider(this.deuxiemeRocher, this.player); // Ajoutez une collision avec le joueur
 this.deuxiemeRocher.setScale(0.1);
-this.deuxiemeRocher.setMass(250); // Vous pouvez ajuster le nombre selon vos besoins
+    //this.rocher.setAcceleration(0);
+    this.deuxiemeRocher.setMass(1);
+    this.deuxiemeRocher.setFrictionX(0.5);
+
+    this.deuxiemeRocher.setPushable(true); // Vous pouvez ajuster le nombre selon vos besoins
+    this.deuxiemeRocher.body.maxVelocity.x = 0.1;
 this.physics.add.collider(this.deuxiemeRocher, this.groupe_plateformes, null, null, this);
 
   }
@@ -211,6 +223,10 @@ if (this.gameOver) {
   this.gameOver = false;
   this.vie=this.vie-1;
   this.text.setText("Il vous reste " + this.vie + " vie(s)");
+  this.rocher.setPosition(2190, 100);
+  this.deuxiemeRocher.setPosition(2687, 300);
+
+  
 }
 
 if (this.vie==0){
@@ -245,16 +261,5 @@ if (this.vie==0){
   // Mise à jour de la position du texte
  
 
-
-  this.input.setDraggable(this.rocher);
-  this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-    gameObject.x = dragX;
-    gameObject.y = dragY;
-});
-this.input.setDraggable(this.deuxiemeRocher);
-this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
-    gameObject.x = dragX;
-    gameObject.y = dragY;
-});
 }
 }

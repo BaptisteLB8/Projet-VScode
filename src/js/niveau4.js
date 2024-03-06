@@ -45,14 +45,15 @@ export default class niveau4 extends Phaser.Scene {
       this.player.setCollideWorldBounds(true); 
       this.physics.add.collider(this.player, this.groupe_plateformes); 
       this.physics.world.setBounds(-50,0, 2800, 1000);
-      this.player.setBounce(0.2); 
+      
       this.player.setScale(grossisment);
       this.clavier = this.input.keyboard.createCursorKeys(); 
+
       this.levier = this.physics.add.staticSprite(20, 140, "img_levier");
       this.levier.active = false;
       this.levier.setDepth(1); // Vous pouvez ajuster la valeur selon vos besoins
       this.levier.setScale(0.7);
-      
+      this.levier.setOrigin(0.5, 0.5);
 
       
      
@@ -160,6 +161,8 @@ export default class niveau4 extends Phaser.Scene {
     hold: 1000,   // délai avant le yoyo : temps qeu al plate-forme reste en haut
     repeatDelay: 1000, // deléi avant la répétition : temps que la plate-forme reste en bas
     repeat: -1 // répétition infinie 
+    
+    
   });
 
     }
@@ -231,6 +234,7 @@ export default class niveau4 extends Phaser.Scene {
       this.gameOver = false;
       this.vie=this.vie-1;
       this.text.setText("Il vous reste " + this.vie + " vie(s)");
+      this.plateforme_supprime.setPosition(2687, 300);
     }
     
     if (this.vie==0){
