@@ -15,6 +15,7 @@ export default class niveau1 extends Phaser.Scene {
     this.bloquage=true;
     this.fleche=null;
     this.groupeBullets=null; 
+    this.nb_aide=0;
   }
 
   preload() {
@@ -30,6 +31,12 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image('soundon1', 'src/assets/SoundOn2.png'); 
     this.load.image('soundoff1', 'src/assets/SoundOff2.png'); 
     this.load.image('clue1', 'src/assets/indice.png'); 
+
+    this.load.image('1_indice1', 'src/assets/Niveau1_Indice1.png'); 
+    this.load.image('1_indice2', 'src/assets/Niveau1_Indice2.png'); 
+    this.load.image('1_indice3', 'src/assets/Niveau1_Indice3.png'); 
+    this.load.image('icone_indice', 'src/assets/indicen.png'); 
+    this.load.image('fleche', 'src/assets/flecheretour.png'); 
 
   }
 
@@ -184,6 +191,50 @@ this.music = this.sound.add('bgniveau1');
       }
   });
 
+  this.bouton_indice1= this.add.image(680, 180, "icone_indice").setDepth(101).setDisplaySize(60, 45).setScrollFactor(0);
+  this.bouton_indice1.setInteractive();
+
+  this.bouton_indice1.on("pointerup", () => {
+    if (this.nb_aide==0) {
+    this.physics.pause();
+    this.image_11=this.add.image(450, 300, "1_indice1").setDepth(101).setDisplaySize(200, 300).setScrollFactor(0);
+    this.bouton_retour11= this.add.image(750, 400, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_retour11.setInteractive();
+    this.bouton_retour11.on("pointerup", () => {
+    this.image_11.destroy();
+    this.nb_aide=1;
+    this.physics.resume();
+    this.bouton_retour11.destroy();
+   });
+  }
+    if (this.nb_aide==1) {
+      this.physics.pause();
+      this.image_21=this.add.image(450, 300, "1_indice2").setDepth(101).setDisplaySize(200, 300).setScrollFactor(0);
+    this.bouton_retour21= this.add.image(750, 400, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_retour21.setInteractive();
+    this.bouton_retour21.on("pointerup", () => {
+    this.image_21.destroy();
+    this.nb_aide=2;
+    this.physics.resume();
+    this.bouton_retour21.destroy();
+  });
+    } if (this.nb_aide==2){
+      this.physics.pause();
+      this.image_31=this.add.image(450, 300, "1_indice3").setDepth(101).setDisplaySize(200, 300).setScrollFactor(0);
+      this.bouton_retour31= this.add.image(750, 400, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour31.setInteractive();
+      this.bouton_retour31.on("pointerup", () => {
+      this.image_31.destroy();
+      this.nb_aide=0;
+      this.physics.resume();
+      this.bouton_retour31.destroy();
+    });
+    }
+});
+
+
+
+
   }
 
   update() {
@@ -242,7 +293,7 @@ this.music = this.sound.add('bgniveau1');
         // Marquer la porte comme contactée
         this.porteContactee = true;
         // Rediriger vers la scène de sélection
-        this.scene.switch("niveau3");
+        this.scene.switch("niveau2");
         this.affichage=1;
         this.music.stop();
       }

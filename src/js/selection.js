@@ -4,6 +4,7 @@
 
     constructor() {
       super({ key: "selection" });
+     
     }
     //on charge les images
     preload() {
@@ -49,7 +50,7 @@
       //Cas ou la sourris clique sur le bouton play :
       // on lance le niveau 1
       bouton_play.on("pointerup", () => {
-        this.scene.start("niveau3");
+        this.scene.start("niveau1");
         this.music.stop();
       });
       //bouton_settings.on("pointerup", () => {
