@@ -27,13 +27,14 @@ export default class niveau2 extends Phaser.Scene {
       // chargement de l'image cible.png
     this.load.image("mammochon", "src/assets/Mammochon.png");  
     this.load.image("flocon", "src/assets/flocon.png");
-    this.load.image("farfuret","src/assets/farfuret.png")
+    this.load.image("farfuret","src/assets/farfuret.png");
     this.load.image('porte', 'src/assets/door3.png');
+    this.load.image('feunard','src/assets/feunard.png');
   }
 
   create() {
      
-    this.player = this.physics.add.sprite(100, 450, 'img_perso'); 
+    this.player = this.physics.add.sprite(416, 576, 'img_perso'); 
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
     this.physics.add.collider(this.player, this.groupe_plateformes); 
@@ -105,7 +106,7 @@ export default class niveau2 extends Phaser.Scene {
       mammochon.setCollideWorldBounds(true);
 
       this.time.addEvent({
-        delay: Phaser.Math.Between(4000, 6000),
+        delay: Phaser.Math.Between(7000, 8000),
         callback: () => {
           this.tirerFlocon(mammochon);
         },
@@ -129,7 +130,7 @@ export default class niveau2 extends Phaser.Scene {
       farfuret.setCollideWorldBounds(true);
 
       this.time.addEvent({
-        delay: Phaser.Math.Between(4000, 6000),
+        delay: Phaser.Math.Between(7000, 8000),
         callback: () => {
           this.tirerFlocon(farfuret);
         },
@@ -137,15 +138,40 @@ export default class niveau2 extends Phaser.Scene {
         loop: true,
       });
     });
- // Affichage du nombre de vies
- this.text = this.add.text(
+    
+    var feunards = this.physics.add.group({
+      key: 'feunard',
+      repeat: 2,
+      setXY: { x: 4352, y: 320, stepX: 128 }
+    });
+
+    this.physics.add.collider(feunards, niveau_neige);
+    this.physics.add.overlap(this.player, feunards, this.chocAvecMammochon, null, this);
+
+    feunards.children.iterate((feunard) => {
+      feunard.setVelocityY(Phaser.Math.Between(-100, -150));
+      feunard.setBounce(1);
+      feunard.setCollideWorldBounds(true);
+
+      this.time.addEvent({
+        delay: Phaser.Math.Between(7000, 8000),
+        callback: () => {
+          this.tirerFlocon(feunard);
+        },
+        callbackScope: this,
+        loop: true,
+      });
+    });
+// Affichage du nombre de vies
+this.text = this.add.text(
   16,
-  320,
+  16,
   "Il vous reste " + this.vie + " vie(s)",
   {
     fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
     fontSize: "22pt",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#000000" // Définir la couleur du texte en noir
   }
 ).setOrigin(0);
 
@@ -167,7 +193,7 @@ export default class niveau2 extends Phaser.Scene {
 
  this.porteContactee =false;
 
- this.porte_retour = this.physics.add.staticSprite(100, 100, "porte").setDisplaySize(20, 40);
+ this.porte_retour = this.physics.add.staticSprite(5984, 576, "porte").setDisplaySize(64, 96).setDepth(100);
 
     this.physics.add.collider(this.projectiles, niveau_neige, this.projectileCollision, null, this);
     this.physics.add.collider(this.projectiles, blocs_caches, this.projectileCollision, null, this);
@@ -181,9 +207,6 @@ export default class niveau2 extends Phaser.Scene {
     } else if (this.clavier.left.isDown) {
       this.player.setVelocityX(-200);
       this.player.anims.play('anim_tourne_gauche', true);
-    } else {
-      this.player.setVelocityX(0);
-      this.player.anims.play('anim_face', true)
     }
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
       this.player.setVelocityY(-450);
@@ -200,30 +223,31 @@ export default class niveau2 extends Phaser.Scene {
           this.scene.start("fin")
         }
       } else {
-        this.player.setPosition(100, 450); // Réinitialisez la position du joueur
+        this.player.setPosition(416, 576); // Réinitialisez la position du joueur
         this.physics.resume(); // Reprenez la simulation physique
         this.player.clearTint(); // Effacez la couleur rouge
         this.gameOver = false; // Réinitialisez la variable gameOver
       }
     }
 
+    // Vérifiez si la touche espace est enfoncée et que le joueur est en collision avec la porte
     if (this.clavier.space.isDown && this.physics.overlap(this.player, this.porte_retour)) {
-      if (this.bloquage==false){
       // Si la porte n'a pas déjà été contactée
       if (!this.porteContactee) {
-        // Marquer la porte comme contactée
-        this.porteContactee = true;
-        // Rediriger vers la scène de sélection
-        this.scene.switch("selection");
+          // Marquer la porte comme contactée
+          this.porteContactee = true;
+          // Rediriger vers le menu de sélection
+          this.scene.start("selection"); 
+          this.porteContactee = false;
+          // Remplacez "nom_de_votre_scene_de_menu" par le nom de votre scène de menu
       }
-    }
-    } else {
-      // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
+  } else {
+      // Si le joueur n'est plus en collision avec la porte, réinitialisez le marqueur
       this.porteContactee = false;
-    }
+  }
     if (this.text) {
       this.text.x = this.cameras.main.scrollX + 16;
-      this.text.y = this.cameras.main.scrollY + 150;
+      this.text.y = this.cameras.main.scrollY + 50;
   }
   }
   
@@ -244,18 +268,19 @@ export default class niveau2 extends Phaser.Scene {
   }
 
   projectileCollisionjoueur(player, projectile) {
-    if (projectile) {
+    
     projectile.setActive(false).setVisible(false);
+    this.physics.world.removeCollider(projectile.body.collider);
     this.physics.pause();
     player.setTint(0xff0000);
     player.anims.play("anim_face");
     this.gameOver = true;
-    }
+    
   }
   projectileCollision(projectile, layer) {
     if (projectile) {
         projectile.setActive(false).setVisible(false);
+        projectile.body.checkCollision.none = true;
     }
-    this.physics.world.removeCollider(projectile.body.collider);}
 }
-
+}
