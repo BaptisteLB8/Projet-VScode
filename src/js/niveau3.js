@@ -12,6 +12,9 @@ export default class niveau3 extends Phaser.Scene {
     this.vie=3;
     this.zone_texte_score;
     this.text=null;
+    this.rocher;
+    this.deuxiemeRocher; 
+    
   }
 
   preload() {
@@ -23,6 +26,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image('soundoff2', 'src/assets/SoundOff.png'); 
     this.load.image('porte_retour', 'src/assets/door3.png'); 
     this.load.audio('bgniveau3', 'src/assets/niveau3.mp3');
+    this.load.image("rocher", "src/assets/pierre.png");
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -33,7 +37,7 @@ export default class niveau3 extends Phaser.Scene {
   create() {
     this.porteContactee=true;
     const grossisment =0.7;
-    this.player = this.physics.add.sprite(0, 0, 'img_perso');
+    this.player = this.physics.add.sprite(1950, 100, 'img_perso');
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 
     this.physics.add.collider(this.player, this.groupe_plateformes); 
@@ -42,6 +46,8 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setScale(grossisment);
     this.clavier = this.input.keyboard.createCursorKeys(); 
     this.player.setPipeline('Light2D');
+
+    
     
 
     this.anims.create({
@@ -72,7 +78,7 @@ export default class niveau3 extends Phaser.Scene {
     const Background = map.createLayer("Background", [ts1, ts2, ts3]);
 
     const Transparent_solide = map.createLayer("Transparent_solide", [ts1, ts2, ts3]);
-    const Sol = map.createLayer("Sol", [ts1, ts2, ts3]);
+    this.Sol = map.createLayer("Sol", [ts1, ts2, ts3]);
     const Pas_solide = map.createLayer("Pas_solide", [ts1, ts2, ts3]);
     this.Solide_premier_plan = map.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
     const Decoration = map.createLayer("Decoration", [ts1, ts2, ts3]);
@@ -83,13 +89,13 @@ Pas_solide.setCollisionByProperty({ estSolide: false });
 this.Solide_premier_plan.setCollisionByProperty({ estSolide : true});
 Decoration.setCollisionByProperty({ estSolide : false});
 Background.setCollisionByProperty({ estSolide : false});
-Sol.setCollisionByProperty({ estSolide : true});
+this.Sol.setCollisionByProperty({ estSolide : true});
 
 
 // ajout d'une collision entre le joueur et le calque plateformes
 this.physics.add.collider(this.player, this.Solide_premier_plan ); 
 this.physics.add.collider(this.player, Transparent_solide ); 
-this.physics.add.collider(this.player, Sol ); 
+this.physics.add.collider(this.player, this.Sol ); 
 
     // redimentionnement du monde avec les dimensions calculées via tiled
     this.physics.world.setBounds(0, 0, 3200, 768);
@@ -101,22 +107,23 @@ this.physics.add.collider(this.player, Sol );
 this.groupe_plateformes = this.physics.add.staticGroup();
 
 this.light = this.lights.addLight(600, 300, 300);
-this.light.setIntensity(2); 
+this.light.setIntensity(1); 
 this.light.setRadius(700);
 this.lights.enable().setAmbientColor(0x000000);
 
 Background.setPipeline('Light2D');
 Transparent_solide.setPipeline('Light2D');
 Decoration.setPipeline('Light2D');
-Sol.setPipeline('Light2D');
+this.Sol.setPipeline('Light2D');
 this.Solide_premier_plan.setPipeline('Light2D');   
 Pas_solide.setPipeline('Light2D'); 
+
 
 
 this.text = this.add.text(
   16, // Coordonnée X par rapport à la caméra
   16, // Coordonnée Y par rapport à la caméra
-  "IL vous reste " + this.vie + " vie(s)",
+  "Il vous reste " + this.vie + " vie(s)",
   {
     fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
     fontSize: "22pt",
@@ -150,6 +157,26 @@ this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDispla
       }
   });
 
+    this.rocher = this.physics.add.sprite(2200, 100, 'rocher');
+    this.rocher.setCollideWorldBounds(true);
+    this.rocher.setInteractive(); // Rend le rocher interactif pour le déplacement
+    this.physics.add.collider(this.rocher, this.Sol); // Ajoutez une collision avec les plateformes
+    this.physics.add.collider(this.rocher, this.Solide_premier_plan);
+    this.physics.add.collider(this.rocher, this.player); // Ajoutez une collision avec les plateformes
+    this.rocher.setScale(0.1);
+    this.rocher.setMass(250); // Vous pouvez ajuster le nombre selon vos besoins
+    this.physics.add.collider(this.rocher, this.groupe_plateformes, null, null, this);
+
+
+this.deuxiemeRocher = this.physics.add.sprite(2687, 300, 'rocher');
+this.deuxiemeRocher.setCollideWorldBounds(true);
+this.deuxiemeRocher.setInteractive(); // Rend le rocher interactif pour le déplacement
+this.physics.add.collider(this.deuxiemeRocher, this.Sol); // Ajoutez une collision avec les plateformes
+this.physics.add.collider(this.deuxiemeRocher, this.Solide_premier_plan);
+this.physics.add.collider(this.deuxiemeRocher, this.player); // Ajoutez une collision avec le joueur
+this.deuxiemeRocher.setScale(0.1);
+this.deuxiemeRocher.setMass(250); // Vous pouvez ajuster le nombre selon vos besoins
+this.physics.add.collider(this.deuxiemeRocher, this.groupe_plateformes, null, null, this);
 
   }
 
@@ -169,7 +196,7 @@ this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDispla
     }
 
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
-      this.player.setVelocityY(-320);
+      this.player.setVelocityY(-310);
     }
 if (this.player.body.blocked.down) {
     var t = this.Solide_premier_plan.getTileAtWorldXY(this.player.x, this.player.y+30);
@@ -183,7 +210,7 @@ if (this.gameOver) {
   this.player.setPosition(0, 0);
   this.gameOver = false;
   this.vie=this.vie-1;
-  this.text.setText("IL vous reste " + this.vie + " vie(s)");
+  this.text.setText("Il vous reste " + this.vie + " vie(s)");
 }
 
 if (this.vie==0){
@@ -219,5 +246,15 @@ if (this.vie==0){
  
 
 
+  this.input.setDraggable(this.rocher);
+  this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+    gameObject.x = dragX;
+    gameObject.y = dragY;
+});
+this.input.setDraggable(this.deuxiemeRocher);
+this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+    gameObject.x = dragX;
+    gameObject.y = dragY;
+});
 }
 }
