@@ -11,15 +11,22 @@ export default class niveau4 extends Phaser.Scene {
       this.vie=3;
       this.zone_texte_score;
       this.text=null;
+      this.plateforme_supprime;
+      this.plateforme_mobile;
+      this.tween_mouvement; 
+      this.levier; 
+      
     }
   
     preload() {
-      this.load.image("tuilesdejeu", "src/asset/Cube.png")
+      this.load.image("tuilesdejeu", "src/assets/Cube.png")
       this.load.image("tuilesdejeu2", "src/assets/ciel.png")
       this.load.image("tuilesdejeu3", "src/assets/Background.png")
       this.load.image("tuilesdejeu4", "src/assets/Deco.png")
-
+      this.load.image("tuilesdejeu5", "src/assets/pic.png")
+      this.load.image("img_plateforme_mobile", "src/assets/plateforme_amovible.png"); 
       this.load.tilemapTiledJSON("carte", "src/assets/map_niveau_bonus.tmj");
+      this.load.image("img_levier", "src/assets/levier.png");
 
       this.load.image('soundon', 'src/assets/SoundOn.png'); 
       this.load.image('soundoff', 'src/assets/SoundOff.png'); 
@@ -32,7 +39,7 @@ export default class niveau4 extends Phaser.Scene {
   
     create() {
       const grossisment =0.7;
-      this.player = this.physics.add.sprite(0, 0, 'img_perso');
+      this.player = this.physics.add.sprite(440, 0, 'img_perso');
       this.player.setDepth(100);
       this.player.setCollideWorldBounds(true); 
       this.physics.add.collider(this.player, this.groupe_plateformes); 
@@ -40,6 +47,14 @@ export default class niveau4 extends Phaser.Scene {
       this.player.setBounce(0.2); 
       this.player.setScale(grossisment);
       this.clavier = this.input.keyboard.createCursorKeys(); 
+      this.levier = this.physics.add.staticSprite(20, 140, "img_levier");
+      this.levier.active = false;
+      this.physics.add.collider(this.player, this.plateforme_mobile);
+      this.levier.setDepth(1); // Vous pouvez ajuster la valeur selon vos besoins
+      this.levier.setScale(0.7);
+      
+
+      
      
   
       this.anims.create({
@@ -68,26 +83,24 @@ export default class niveau4 extends Phaser.Scene {
       const ts2 = map.addTilesetImage("Ciel", "tuilesdejeu2");
       const ts3 = map.addTilesetImage("Fond", "tuilesdejeu3");
       const ts4 = map.addTilesetImage("Deco","tuilesdejeu4")
+      const ts5 = map.addTilesetImage("Pic","tuilesdejeu5")
 
-      
+      const Fond = map.createLayer("Fond", [ts1, ts2, ts3,ts4]);
+      const Invisible_solide = map.createLayer("Invisible_solide", [ts1, ts2, ts3,ts4]);
+      const Deco = map.createLayer("Deco", [ts1, ts2, ts3, ts4, ts5]);
       const Mur_transparent = map.createLayer("Mur_transparent", [ts1, ts2, ts3, ts4]);     
-      const Plateforme = map.createLayer("Plateforme", [ts1, ts2, ts3, ts4]); 
-      const Fond = map.createLayer("Fond", [ts1, ts2, ts3]);
+      const Plateforme = map.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
      
-      const Invisible_solide = map.createLayer("Invisible_solide", [ts1, ts2, ts3]);
-      const Deco = map.createLayer("Deco", [ts1, ts2, ts3, ts4]);
-
-
+    
       Plateforme.setCollisionByProperty({ estSolide: true }); 
       Fond.setCollisionByProperty({ estSolide : false});
       Deco.setCollisionByProperty({ estSolide : false});
-      Invisible_solide.setCollisionByProperty({ estSolide : true});
-      
+      Invisible_solide.setCollisionByProperty({ estSolide: true });
       Mur_transparent.setCollisionByProperty({ estSolide: false });
   
   
   // ajout d'une collision entre le joueur et le calque plateformes
-  this.physics.add.collider(this.player, this.Invisible_solide ); 
+  this.physics.add.collider(this.player, Invisible_solide ); 
   this.physics.add.collider(this.player, Plateforme ); 
    
   
@@ -111,6 +124,41 @@ export default class niveau4 extends Phaser.Scene {
     }
   ).setOrigin(0);
 
+
+  this.plateforme_supprime = this.physics.add.sprite(
+    2430,
+    250,
+    "img_plateforme_mobile"
+  ); 
+
+  this.plateforme_mobile = this.physics.add.sprite(
+    2430,
+    400,
+    "img_plateforme_mobile"
+  ); 
+
+  this.plateforme_supprime.body.allowGravity = false;
+  this.plateforme_supprime.body.immovable = true; 
+  this.plateforme_supprime.setScale(0.62);
+
+  this.plateforme_mobile.body.allowGravity = false;
+  this.plateforme_mobile.body.immovable = true; 
+  this.plateforme_mobile.setScale(0.62);
+
+
+  this.tween_mouvement = this.tweens.add({
+    targets: [this.plateforme_mobile],  // on applique le tween sur platefprme_mobile
+    paused: true, // de base le tween est en pause
+    ease: "Linear",  // concerne la vitesse de mouvement : linéaire ici 
+    duration: 2000,  // durée de l'animation pour monter 
+    yoyo: true,   // mode yoyo : une fois terminé on "rembobine" le déplacement 
+    y: "-=300",   // on va déplacer la plateforme de 300 pixel vers le haut par rapport a sa position
+    delay: 0,     // délai avant le début du tween une fois ce dernier activé
+    hold: 1000,   // délai avant le yoyo : temps qeu al plate-forme reste en haut
+    repeatDelay: 1000, // deléi avant la répétition : temps que la plate-forme reste en bas
+    repeat: -1 // répétition infinie 
+  });
+
     }
   
   
@@ -128,7 +176,7 @@ export default class niveau4 extends Phaser.Scene {
       }
   
       if (this.clavier.up.isDown && this.player.body.blocked.down) {
-        this.player.setVelocityY(-320);
+        this.player.setVelocityY(-20);
       }
  
   
@@ -145,6 +193,28 @@ export default class niveau4 extends Phaser.Scene {
       this.text.y = this.cameras.main.scrollY + 16;
       }
   
-  
+      const distance = Phaser.Math.Distance.Between(
+        this.player.x,
+        this.player.y,
+        this.plateforme_supprime.x,
+        this.plateforme_supprime.y
+      );
+    
+      // Si la distance est inférieure à une certaine valeur, détruire la plateforme
+      const distanceLimite = 100; // Définissez la distance limite selon vos besoins
+      if (distance < distanceLimite) {
+        this.plateforme_supprime.destroy();
+      }
+    
+      // Ajoutez ici le reste de votre logique update
+    
+      if (this.clavier.space.isDown && this.physics.overlap(this.player, this.levier)) {
+        // Si la touche d'espace est enfoncée et que le joueur est en collision avec le levier
+        // Activer le levier et déclencher l'action du caillou mobile
+        this.levier.active = true;
+        this.levier.flipX = true; // on tourne l'image du levier
+        this.tween_mouvement.resume();  // on relance le tween
+        this.bloquage = false;
+      }
     }
 }
