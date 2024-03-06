@@ -15,7 +15,6 @@ export default class niveau1 extends Phaser.Scene {
     this.bloquage=true;
     this.fleche=null;
     this.groupeBullets=null; 
-    this.aide=0;
   }
 
   preload() {
@@ -30,7 +29,7 @@ export default class niveau1 extends Phaser.Scene {
     this.load.audio('bgniveau1', 'src/assets/niveau1.mp3');
     this.load.image('soundon1', 'src/assets/SoundOn2.png'); 
     this.load.image('soundoff1', 'src/assets/SoundOff2.png'); 
-    this.load.image('clue1', 'src/assets/indicen.png'); 
+    this.load.image('clue1', 'src/assets/indice.png'); 
 
   }
 
@@ -94,7 +93,7 @@ export default class niveau1 extends Phaser.Scene {
         child.setScale(0.07); // Réglez la valeur de l'échelle selon vos besoins
     });
     this.physics.add.collider(mzelda, calque_plateformes);
-    this.physics.add.collider(this.player, mzelda, this.chocAvecmzelda, null, this);
+    this.physics.add.overlap(this.player, mzelda, this.chocAvecmzelda, null, this);
     this.projectiles = this.physics.add.group();
 
     mzelda.children.iterate((mzelda) => {
@@ -102,7 +101,6 @@ export default class niveau1 extends Phaser.Scene {
       mzelda.setBounce(1);
       mzelda.setCollideWorldBounds(true);
     });
-
 
     // Affichage du nombre de vies
     this.text = this.add.text(
@@ -185,22 +183,8 @@ this.music = this.sound.add('bgniveau1');
           this.musicPlaying = true; // Mettre à jour le statut de la musique
       }
   });
-  this.bouton_indice1 = this.add.image(700, 180, "clue1").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
-  this.bouton_indice1.setInteractive();
-  this.bouton_indice1.on("pointerup", () => {
-    if (this.aide==0){
-      window.alert("Indice 1");
-      aide=aide+1;
-    }
-    if (this.aide==1){
-      window.alert("Indice 2");
-      aide=aide+1;
-    }
-    
-  });
 
   }
-
 
   update() {
     if (this.clavier.right.isDown) {
@@ -220,7 +204,7 @@ this.music = this.sound.add('bgniveau1');
     if (this.gameOver) {
       this.vie--; // Décrémentez le nombre de vies
       this.text.setText("Il vous reste " + this.vie + " vie(s)"); // Mettez à jour le texte affichant le nombre de vies
-      if (this.levier.flipX = true){
+      if (this.levier.flipX == true){
         this.levier.active = false;
         this.levier.flipX = false; // on tourne l'image du levier
         this.tween_mouvement.stop();  // on relance le tween
@@ -235,10 +219,9 @@ this.music = this.sound.add('bgniveau1');
         caillou_mobile.body.allowGravity = false;
         caillou_mobile.body.immovable = true; }
 
-
-
       if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
         this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
+        this.vie=4;
 
         if (this.vie==0){
           this.vie=4;
@@ -312,7 +295,6 @@ chocAvecmzelda(player, mzelda){
 collisionFlecheMzelda(bullet, mzelda) {
   bullet.destroy(); // Détruisez la flèche
   mzelda.destroy(); // Détruisez Mzelda
-
 
   
 }
