@@ -175,7 +175,7 @@ export default class niveau1 extends Phaser.Scene {
         // Marquer la porte comme contactée
         this.porteContactee = true;
         // Rediriger vers la scène de sélection
-        this.scene.switch("selection");
+        this.scene.switch("niveau3");
       }
     }
     } else {

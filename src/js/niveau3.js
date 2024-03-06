@@ -19,9 +19,10 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image("tuilesdejeu2", "src/assets/ground.png")
     this.load.image("tuilesdejeu3", "src/assets/nuit.jpg")
     this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
-    this.load.image('soundon', 'src/assets/SoundOn.png'); 
-    this.load.image('soundoff', 'src/assets/SoundOff.png'); 
+    this.load.image('soundon2', 'src/assets/SoundOn.png'); 
+    this.load.image('soundoff2', 'src/assets/SoundOff.png'); 
     this.load.image('porte_retour', 'src/assets/door3.png'); 
+    this.load.audio('bgniveau3', 'src/assets/niveau3.mp3');
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -124,9 +125,18 @@ this.text = this.add.text(
 ).setOrigin(0);
 this.porteContactee =false;
 
-this.porte_retour = this.physics.add.staticSprite(3145, 230, "porte_retour").setDisplaySize(30, 50).setPipeline('Light2D');
+this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDisplaySize(30, 50).setPipeline('Light2D');
 
-      this.player.x = 3145;
+    this.porte_retour.body.allowGravity =false;
+
+    this.music = this.sound.add('bgniveau3');
+    this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
+
+    this.bouton_SoundOn = this.add.image(750, 50, "soundon2").setDepth(7).setDisplaySize(30, 35);
+    this.bouton_SoundOn.setInteractive();
+    this.music.play();
+
+
   }
 
 
@@ -180,7 +190,7 @@ if (this.vie==0){
       // Marquer la porte comme contactée
       this.porteContactee = true;
       // Rediriger vers la scène de sélection
-      this.scene.switch("selection");
+      this.scene.start("selection");
     }
   } else {
     // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
@@ -197,6 +207,21 @@ if (this.vie==0){
     this.text.y = this.cameras.main.scrollY + 16;
   }
 
+  this.bouton_SoundOn.x = this.cameras.main.scrollX + 750;
+  this.bouton_SoundOn.y = this.cameras.main.scrollY + 50;
+
+  // Gestion de l'événement pointerup sur le bouton SoundOn
+  this.bouton_SoundOn.on("pointerup", () => {
+      if (this.musicPlaying) {
+          this.music.stop(); // Arrêter la musique
+          this.bouton_SoundOn.setTexture("soundoff2").setDisplaySize(30, 30); // Changer le bouton en Sound Off
+          this.musicPlaying = false; // Mettre à jour le statut de la musique
+      } else {
+          this.music.play(); // Reprendre la musique
+          this.bouton_SoundOn.setTexture("soundon2").setDisplaySize(30, 35); // Changer le bouton en Sound On
+          this.musicPlaying = true; // Mettre à jour le statut de la musique
+      }
+  });
 
 }
 }
