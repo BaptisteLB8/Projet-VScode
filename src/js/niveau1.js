@@ -15,6 +15,7 @@ export default class niveau1 extends Phaser.Scene {
     this.bloquage=true;
     this.fleche=null;
     this.groupeBullets=null; 
+    this.aide=0;
   }
 
   preload() {
@@ -29,7 +30,7 @@ export default class niveau1 extends Phaser.Scene {
     this.load.audio('bgniveau1', 'src/assets/niveau1.mp3');
     this.load.image('soundon1', 'src/assets/SoundOn2.png'); 
     this.load.image('soundoff1', 'src/assets/SoundOff2.png'); 
-    this.load.image('clue1', 'src/assets/indice.png'); 
+    this.load.image('clue1', 'src/assets/indicen.png'); 
 
   }
 
@@ -183,6 +184,19 @@ this.music = this.sound.add('bgniveau1');
           this.bouton_SoundOn1.setTexture("soundon1").setDisplaySize(60, 45); // Changer le bouton en Sound On
           this.musicPlaying = true; // Mettre à jour le statut de la musique
       }
+  });
+  this.bouton_indice1 = this.add.image(700, 180, "clue1").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+  this.bouton_indice1.setInteractive();
+  this.bouton_indice1.on("pointerup", () => {
+    if (this.aide==0){
+      window.alert("Indice 1");
+      aide=aide+1;
+    }
+    if (this.aide==1){
+      window.alert("Indice 2");
+      aide=aide+1;
+    }
+    
   });
 
   }
