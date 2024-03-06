@@ -211,6 +211,7 @@ this.music = this.sound.add('bgniveau1');
         this.levier.flipX = false; // on tourne l'image du levier
         this.tween_mouvement.stop();  // on relance le tween
         this.bloquage=true;
+        
         var caillou_mobile = this.physics.add.sprite(
           993,
           107,
