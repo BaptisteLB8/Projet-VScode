@@ -13,18 +13,19 @@ export default class niveau1 extends Phaser.Scene {
     this.levier = null; 
     this.tween_mouvement = null;
     this.bloquage=true;
+    this.fleche=null;
+    this.groupeBullets=null; 
   }
+
   preload() {
     this.load.image("Phaser_tuilesdejeu", "src/assets/Tuile.png");
     this.load.tilemapTiledJSON("cartes", "src/assets/Mapforet.json");
-    this.load.spritesheet("img_perso", "src/assets/farmer.png", {
-      frameWidth: 45,
-      frameHeight: 50
-    });
-    this.load.image("mechant", "src/assets/mechant.png");
+    this.load.spritesheet("img_perso", "src/assets/farmer.png", {frameWidth: 45,frameHeight: 50});
     this.load.image('porte', 'src/assets/door3.png');
     this.load.image('caillou', 'src/assets/cayu2.png');
     this.load.image("img_levier", "src/assets/levier.png");
+    this.load.image("bullet", "src/assets/fleche.png"); 
+    this.load.image("mzelda", "src/assets/mzelda.png");  
 
   }
 
@@ -78,6 +79,26 @@ export default class niveau1 extends Phaser.Scene {
 
     this.groupe_plateformes = this.physics.add.staticGroup();
 
+    var mzelda = this.physics.add.group({
+      key: 'mzelda',
+      repeat: 2,
+      setXY: { x: 720, y: 250, stepX: 80 }
+    });
+      // Ajuster la taille de l'image de mzelda
+      mzelda.children.iterate((child) => {
+        child.setScale(0.07); // Réglez la valeur de l'échelle selon vos besoins
+    });
+    this.physics.add.collider(mzelda, calque_plateformes);
+    this.physics.add.collider(this.player, mzelda, this.chocAvecmzelda, null, this);
+    this.projectiles = this.physics.add.group();
+
+    mzelda.children.iterate((mzelda) => {
+      mzelda.setVelocityY(Phaser.Math.Between(-100, -50));
+      mzelda.setBounce(1);
+      mzelda.setCollideWorldBounds(true);
+    });
+
+
     // Affichage du nombre de vies
     this.text = this.add.text(
       16,
@@ -108,10 +129,10 @@ export default class niveau1 extends Phaser.Scene {
 
     this.porteContactee =false;
 
-    this.porte_retour = this.physics.add.staticSprite(993, 105, "porte").setDisplaySize(30, 50);
+    this.porte_retour = this.physics.add.staticSprite(990, 110, "porte").setDisplaySize(20, 40);
     var caillou_mobile = this.physics.add.sprite(
       993,
-      100,
+      107,
       "caillou"
     ); 
     caillou_mobile.setScale(0.15);
@@ -132,6 +153,14 @@ export default class niveau1 extends Phaser.Scene {
     this.levier = this.physics.add.staticSprite(1550, 270, "img_levier").setScale(0.6);
     this.levier.active = false;
 
+    // A l'intérieur de la méthode create()
+this.fleche = this.input.keyboard.addKey('A'); // Correction: utilisez this pour référencer fleche
+this.groupeBullets = this.physics.add.group(); // Correction: utilisez this pour référencer groupeBullets
+// A l'intérieur de la méthode create()
+this.physics.add.collider(this.groupeBullets, calque_plateformes, function(bullet, platform) {
+  bullet.destroy(); // Détruisez la balle lorsqu'elle entre en collision avec une plateforme
+});
+this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda, null, this);
   }
 
 
@@ -195,8 +224,42 @@ export default class niveau1 extends Phaser.Scene {
       this.text.x = this.cameras.main.scrollX + 16;
       this.text.y = this.cameras.main.scrollY + 150;
     }
-  
-
-
-  }
+// A l'intérieur de la méthode update()
+if (Phaser.Input.Keyboard.JustDown(this.fleche)) { // Correction: utilisez this.fleche
+  this.tirer(this.player); // Correction: utilisez this.tirer
 }
+  }
+tirer(player) {
+  var bullet = this.groupeBullets.create(player.x, player.y - 10, 'bullet');
+  bullet.setCollideWorldBounds(true);
+  bullet.body.allowGravity = true;
+  bullet.body.gravity.y = 1000;
+  var coefDir;
+  if (player.body.velocity.x < 0) {
+      coefDir = -1;
+  } else {
+      coefDir = 1;
+  }
+
+  bullet.setScale(0.05); // Réduire la taille de la flèche selon vos besoins
+
+  bullet.setVelocity(300 * coefDir, -400);
+}
+
+chocAvecmzelda(player, mzelda){
+  this.physics.pause();
+  player.setTint(0xff0000);
+  player.anims.play("anim_face");
+  this.gameOver = true;
+  mzelda.setVelocityY(Phaser.Math.Between(-100, 50));
+}
+
+// Ajoutez la fonction de collision
+collisionFlecheMzelda(bullet, mzelda) {
+  bullet.destroy(); // Détruisez la flèche
+  mzelda.destroy(); // Détruisez Mzelda
+}
+
+}
+
+
