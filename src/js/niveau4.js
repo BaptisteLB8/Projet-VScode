@@ -21,13 +21,13 @@ export default class niveau4 extends Phaser.Scene {
     }
   
     preload() {
-      this.load.image("tuilesdejeu", "src/assets/Cube.png")
-      this.load.image("tuilesdejeu2", "src/assets/ciel.png")
-      this.load.image("tuilesdejeu3", "src/assets/Background.png")
+      this.load.image("tuilesdejeuA", "src/assets/Cube.png")
+      this.load.image("tuilesdejeu2A", "src/assets/ciel.png")
+      this.load.image("tuilesdejeu3A", "src/assets/Background.png")
       this.load.image("tuilesdejeu4", "src/assets/Deco.png")
       this.load.image("tuilesdejeu5", "src/assets/pic.png")
       this.load.image("img_plateforme_mobile", "src/assets/plateforme_amovible.png"); 
-      this.load.tilemapTiledJSON("carte", "src/assets/map_niveau_bonus.tmj");
+      this.load.tilemapTiledJSON("carte4", "src/assets/map_niveau_bonus.tmj");
       this.load.image("img_levier", "src/assets/levier.png");
       this.load.image('porte_retour2', 'src/assets/door3.png'); 
       this.load.audio('bgniveau4', 'src/assets/niveau4.mp3');
@@ -38,8 +38,8 @@ export default class niveau4 extends Phaser.Scene {
     this.load.image('fleche', 'src/assets/flecheretourb.png'); 
 
 
-      this.load.image('soundon4', 'src/assets/SoundOn.png'); 
-      this.load.image('soundoff4', 'src/assets/SoundOff.png'); 
+      this.load.image('soundon4', 'src/assets/SoundOn2.png'); 
+      this.load.image('soundoff4', 'src/assets/SoundOff2.png'); 
   
       this.load.spritesheet("img_perso", "src/assets/farmer.png", {
         frameWidth: 45,
@@ -87,19 +87,19 @@ export default class niveau4 extends Phaser.Scene {
         frameRate: 20
       });
   
-      const map = this.add.tilemap("carte");
+      const map4 = this.add.tilemap("carte4");
   
-      const ts1 = map.addTilesetImage("Cube", "tuilesdejeu");
-      const ts2 = map.addTilesetImage("Ciel", "tuilesdejeu2");
-      const ts3 = map.addTilesetImage("Fond", "tuilesdejeu3");
-      const ts4 = map.addTilesetImage("Deco","tuilesdejeu4")
-      const ts5 = map.addTilesetImage("Pic","tuilesdejeu5")
+      const ts1 = map4.addTilesetImage("Cube", "tuilesdejeuA");
+      const ts2 = map4.addTilesetImage("Ciel", "tuilesdejeu2A");
+      const ts3 = map4.addTilesetImage("Fond", "tuilesdejeu3A");
+      const ts4 = map4.addTilesetImage("Deco","tuilesdejeu4")
+      const ts5 = map4.addTilesetImage("Pic","tuilesdejeu5")
 
-      const Fond = map.createLayer("Fond", [ts1, ts2, ts3,ts4]);
-      const Invisible_solide = map.createLayer("Invisible_solide", [ts1, ts2, ts3,ts4]);
-      const Deco = map.createLayer("Deco", [ts1, ts2, ts3, ts4, ts5]);
-      const Mur_transparent = map.createLayer("Mur_transparent", [ts1, ts2, ts3, ts4]);     
-      this.Plateforme = map.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
+      const Fond = map4.createLayer("Fond", [ts1, ts2, ts3,ts4]);
+      const Invisible_solide = map4.createLayer("Invisible_solide", [ts1, ts2, ts3,ts4]);
+      const Deco = map4.createLayer("Deco", [ts1, ts2, ts3, ts4, ts5]);
+      const Mur_transparent = map4.createLayer("Mur_transparent", [ts1, ts2, ts3, ts4]);     
+      this.Plateforme = map4.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
      
     
       this.Plateforme.setCollisionByProperty({ estSolide: true }); 
@@ -272,7 +272,7 @@ export default class niveau4 extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
           if (this.physics.overlap(this.player, this.porte_retour)) {
               console.log("niveau 4 : retour vers selection");
-              this.scene.start("selection");
+              this.scene.start("fin");
           }
       }
   
@@ -331,7 +331,7 @@ export default class niveau4 extends Phaser.Scene {
         // Marquer la porte comme contactée
         this.porteContactee = true;
         // Rediriger vers la scène de sélection
-        this.scene.start("niveau3");
+        this.scene.start("fin");
       }
     } else {
       // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur

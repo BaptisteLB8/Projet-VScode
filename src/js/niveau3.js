@@ -19,10 +19,10 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tuilesdejeu", "src/assets/tuiles.png")
-    this.load.image("tuilesdejeu2", "src/assets/ground.png")
+    this.load.image("tuilesdejeuT", "src/assets/tuiles.png")
+    this.load.image("tuilesdejeu2T", "src/assets/ground.png")
     this.load.image("tuilesdejeu3", "src/assets/nuit.jpg")
-    this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
+    this.load.tilemapTiledJSON("carte3", "src/assets/map_niveau3.tmj");
     this.load.image('soundon2', 'src/assets/SoundOn.png'); 
     this.load.image('soundoff2', 'src/assets/SoundOff.png'); 
     this.load.image('porte_retour', 'src/assets/door3.png'); 
@@ -31,8 +31,8 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image('3_indice1', 'src/assets/Niveau3_Indice1.png'); 
     this.load.image('3_indice2', 'src/assets/Niveau3_Indice2.png'); 
     this.load.image('3_indice3', 'src/assets/Niveau3_Indice3.png'); 
-    this.load.image('icone_indice', 'src/assets/indiceb.png'); 
-    this.load.image('fleche', 'src/assets/flecheretourb.png'); 
+    this.load.image('icone_indice3', 'src/assets/indiceb.png'); 
+    this.load.image('fleche3', 'src/assets/flecheretourb.png'); 
 
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
@@ -77,26 +77,25 @@ export default class niveau3 extends Phaser.Scene {
       frameRate: 20
     });
 
-    const map = this.add.tilemap("carte");
+    const map3 = this.add.tilemap("carte3");
 
 
 
     
 
-    const ts1 = map.addTilesetImage("Paysan", "tuilesdejeu");
-    const ts2 = map.addTilesetImage("Fond", "tuilesdejeu2");
-    const ts3 = map.addTilesetImage("Background", "tuilesdejeu3");
-    this.Background = map.createLayer("Background", [ts1, ts2, ts3]);
+    const ts1 = map3.addTilesetImage("Paysan", "tuilesdejeuT");
+    const ts2 = map3.addTilesetImage("Fond", "tuilesdejeu2T");
+    const ts3 = map3.addTilesetImage("Background", "tuilesdejeu3");
+    this.Background = map3.createLayer("Background", [ts1, ts2, ts3]);
 
-    this.Transparent_solide = map.createLayer("Transparent_solide", [ts1, ts2, ts3]);
-    this.Sol = map.createLayer("Sol", [ts1, ts2, ts3]);
-    this.Pas_solide = map.createLayer("Pas_solide", [ts1, ts2, ts3]);
-    this.Solide_premier_plan = map.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
-    this.Decoration = map.createLayer("Decoration", [ts1, ts2, ts3]);
+    this.Transparent_solide = map3.createLayer("Transparent_solide", [ts1, ts2, ts3]);
+    this.Sol = map3.createLayer("Sol", [ts1, ts2, ts3]);
+    this.Pas_solide = map3.createLayer("Pas_solide", [ts1, ts2, ts3]);
+    this.Solide_premier_plan = map3.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
+    this.Decoration = map3.createLayer("Decoration", [ts1, ts2, ts3]);
     
 
 this.Transparent_solide.setCollisionByProperty({ estSolide: true }); 
-console.log('Transparent_solide:', this.Transparent_solide);
 this.Pas_solide.setCollisionByProperty({ estSolide: false }); 
 this.Solide_premier_plan.setCollisionByProperty({ estSolide : true});
 this.Decoration.setCollisionByProperty({ estSolide : false});
@@ -202,14 +201,14 @@ this.deuxiemeRocher.setScale(0.1);
     this.deuxiemeRocher.body.maxVelocity.x = 0.1;
 this.physics.add.collider(this.deuxiemeRocher, this.groupe_plateformes, null, null, this);
 
-this.bouton_indice3= this.add.image(680, 35, "icone_indice").setDepth(101).setDisplaySize(60, 45).setScrollFactor(0);
+this.bouton_indice3= this.add.image(680, 35, "icone_indice3").setDepth(101).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_indice3.setInteractive();
 
     this.bouton_indice3.on("pointerup", () => {
       if (this.nb_aide==0) {
       this.physics.pause();
       this.image_13=this.add.image(400, 300, "3_indice1").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
-      this.bouton_retour13= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour13= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour13.setInteractive();
       this.bouton_retour13.on("pointerup", () => {
       this.image_13.destroy();
@@ -221,7 +220,7 @@ this.bouton_indice3= this.add.image(680, 35, "icone_indice").setDepth(101).setDi
       if (this.nb_aide==1) {
         this.physics.pause();
         this.image_23=this.add.image(400, 300, "3_indice2").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
-      this.bouton_retour23= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour23= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour23.setInteractive();
       this.bouton_retour23.on("pointerup", () => {
       this.image_23.destroy();
@@ -232,7 +231,7 @@ this.bouton_indice3= this.add.image(680, 35, "icone_indice").setDepth(101).setDi
       } if (this.nb_aide==2){
         this.physics.pause();
         this.image_33=this.add.image(400, 300, "3_indice3").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
-        this.bouton_retour33= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+        this.bouton_retour33= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
         this.bouton_retour33.setInteractive();
         this.bouton_retour33.on("pointerup", () => {
         this.image_33.destroy();
@@ -284,7 +283,7 @@ if (this.gameOver) {
 
 if (this.vie==0){
   this.vie=3;
-  this.scene.start("fin")
+  this.scene.start("niveau4")
 }
 
   // Déplacements du joueur

@@ -21,7 +21,7 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image("tuilesdejeu","src/assets/BG_neige.png")
     this.load.image("tuilesdejeu2","src/assets/Tileset_neige.png")
     
-    this.load.tilemapTiledJSON("carte","src/assets/map_neige.tmj")
+    this.load.tilemapTiledJSON("carte2","src/assets/map_neige.tmj")
     
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -75,15 +75,15 @@ export default class niveau2 extends Phaser.Scene {
       frameRate: 20
     });
 
-    const map = this.add.tilemap("carte");
+    const map2 = this.add.tilemap("carte2");
 
-    const ts1 = map.addTilesetImage("BG", "tuilesdejeu");
-    const ts2 = map.addTilesetImage("Tileset neige", "tuilesdejeu2");
+    const ts1 = map2.addTilesetImage("BG", "tuilesdejeu");
+    const ts2 = map2.addTilesetImage("Tileset neige", "tuilesdejeu2");
 
-    const Background = map.createLayer("Background", [ts1, ts2]);
-    const Decor = map.createLayer("Decor", [ts1, ts2]);
-    const niveau_neige = map.createLayer("niveau_neige", [ts1, ts2]);
-    const blocs_caches = map.createLayer("blocs_caches", [ts1, ts2]);
+    const Background = map2.createLayer("Background", [ts1, ts2]);
+    const Decor = map2.createLayer("Decor", [ts1, ts2]);
+    const niveau_neige = map2.createLayer("niveau_neige", [ts1, ts2]);
+    const blocs_caches = map2.createLayer("blocs_caches", [ts1, ts2]);
 
     Background.setCollisionByProperty({ estSolide: false });
     Decor.setCollisionByProperty({ estSolide: false });
