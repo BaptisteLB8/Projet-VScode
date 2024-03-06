@@ -26,6 +26,9 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("img_levier", "src/assets/levier.png");
     this.load.image("bullet", "src/assets/fleche.png"); 
     this.load.image("mzelda", "src/assets/mzelda.png");  
+    this.load.audio('bgniveau1', 'src/assets/niveau1.mp3');
+    this.load.image('soundon1', 'src/assets/SoundOn2.png'); 
+    this.load.image('soundoff1', 'src/assets/SoundOff2.png'); 
 
   }
 
@@ -161,6 +164,13 @@ this.physics.add.collider(this.groupeBullets, calque_plateformes, function(bulle
   bullet.destroy(); // Détruisez la balle lorsqu'elle entre en collision avec une plateforme
 });
 this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda, null, this);
+
+this.music = this.sound.add('bgniveau1');
+    this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
+
+    this.bouton_SoundOn = this.add.image(750, 50, "soundon1").setDepth(1).setDisplaySize(60, 45);
+    this.bouton_SoundOn.setInteractive();
+    this.music.play();
   }
 
 
@@ -275,6 +285,22 @@ chocAvecmzelda(player, mzelda){
 collisionFlecheMzelda(bullet, mzelda) {
   bullet.destroy(); // Détruisez la flèche
   mzelda.destroy(); // Détruisez Mzelda
+
+
+  this.bouton_SoundOn.x = this.cameras.main.scrollX + 750;
+  this.bouton_SoundOn.y = this.cameras.main.scrollY + 50;
+
+  this.bouton_SoundOn.on("pointerup", () => {
+    if (this.musicPlaying) {
+        this.music.stop(); // Arrêter la musique
+        this.bouton_SoundOn.setTexture("soundoff1").setDisplaySize(40, 40); // Changer le bouton en Sound Off
+        this.musicPlaying = false; // Mettre à jour le statut de la musique
+    } else {
+        this.music.play(); // Reprendre la musique
+        this.bouton_SoundOn.setTexture("soundon1").setDisplaySize(60, 45); // Changer le bouton en Sound On
+        this.musicPlaying = true; // Mettre à jour le statut de la musique
+    }
+});
 }
 
 }
