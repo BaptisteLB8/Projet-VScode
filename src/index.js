@@ -12,6 +12,7 @@ import fin from "/src/js/fin.js";
 
 
 // configuration générale du jeu
+var affichage=0;
 var config = {
   type: Phaser.AUTO,
   width: 800, // largeur en pixels

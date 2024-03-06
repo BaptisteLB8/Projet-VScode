@@ -182,6 +182,22 @@ this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda
     if (this.gameOver) {
       this.vie--; // Décrémentez le nombre de vies
       this.text.setText("Il vous reste " + this.vie + " vie(s)"); // Mettez à jour le texte affichant le nombre de vies
+      if (this.levier.flipX = true){
+        this.levier.active = false;
+        this.levier.flipX = false; // on tourne l'image du levier
+        this.tween_mouvement.stop();  // on relance le tween
+        this.bloquage=true;
+        var caillou_mobile = this.physics.add.sprite(
+          993,
+          107,
+          "caillou"
+        ); 
+        caillou_mobile.setScale(0.15);
+        caillou_mobile.body.allowGravity = false;
+        caillou_mobile.body.immovable = true; }
+
+
+
       if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
         this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
 
@@ -204,7 +220,8 @@ this.physics.add.collider(this.groupeBullets, mzelda, this.collisionFlecheMzelda
         // Marquer la porte comme contactée
         this.porteContactee = true;
         // Rediriger vers la scène de sélection
-        this.scene.switch("selection");
+        this.scene.switch("niveau3");
+        this.affichage=1;
       }
     }
     } else {

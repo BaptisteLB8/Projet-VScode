@@ -16,6 +16,7 @@ export default class niveau4 extends Phaser.Scene {
       this.tween_mouvement; 
       this.levier; 
       
+      
     }
   
     preload() {
@@ -49,7 +50,6 @@ export default class niveau4 extends Phaser.Scene {
       this.clavier = this.input.keyboard.createCursorKeys(); 
       this.levier = this.physics.add.staticSprite(20, 140, "img_levier");
       this.levier.active = false;
-      this.physics.add.collider(this.player, this.plateforme_mobile);
       this.levier.setDepth(1); // Vous pouvez ajuster la valeur selon vos besoins
       this.levier.setScale(0.7);
       
@@ -89,10 +89,10 @@ export default class niveau4 extends Phaser.Scene {
       const Invisible_solide = map.createLayer("Invisible_solide", [ts1, ts2, ts3,ts4]);
       const Deco = map.createLayer("Deco", [ts1, ts2, ts3, ts4, ts5]);
       const Mur_transparent = map.createLayer("Mur_transparent", [ts1, ts2, ts3, ts4]);     
-      const Plateforme = map.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
+      this.Plateforme = map.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
      
     
-      Plateforme.setCollisionByProperty({ estSolide: true }); 
+      this.Plateforme.setCollisionByProperty({ estSolide: true }); 
       Fond.setCollisionByProperty({ estSolide : false});
       Deco.setCollisionByProperty({ estSolide : false});
       Invisible_solide.setCollisionByProperty({ estSolide: true });
@@ -101,7 +101,8 @@ export default class niveau4 extends Phaser.Scene {
   
   // ajout d'une collision entre le joueur et le calque plateformes
   this.physics.add.collider(this.player, Invisible_solide ); 
-  this.physics.add.collider(this.player, Plateforme ); 
+  this.physics.add.collider(this.player, this.Plateforme ); 
+
    
   
       // redimentionnement du monde avec les dimensions calculées via tiled
@@ -116,7 +117,7 @@ export default class niveau4 extends Phaser.Scene {
   this.text = this.add.text(
     16, // Coordonnée X par rapport à la caméra
     16, // Coordonnée Y par rapport à la caméra
-    "IL vous reste " + this.vie + " vies",
+    "Il vous reste " + this.vie + " vies",
     {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: "22pt",
@@ -137,6 +138,8 @@ export default class niveau4 extends Phaser.Scene {
     "img_plateforme_mobile"
   ); 
 
+  this.physics.add.collider(this.player, this.plateforme_mobile);
+
   this.plateforme_supprime.body.allowGravity = false;
   this.plateforme_supprime.body.immovable = true; 
   this.plateforme_supprime.setScale(0.62);
@@ -150,7 +153,7 @@ export default class niveau4 extends Phaser.Scene {
     targets: [this.plateforme_mobile],  // on applique le tween sur platefprme_mobile
     paused: true, // de base le tween est en pause
     ease: "Linear",  // concerne la vitesse de mouvement : linéaire ici 
-    duration: 2000,  // durée de l'animation pour monter 
+    duration: 5000,  // durée de l'animation pour monter 
     yoyo: true,   // mode yoyo : une fois terminé on "rembobine" le déplacement 
     y: "-=300",   // on va déplacer la plateforme de 300 pixel vers le haut par rapport a sa position
     delay: 0,     // délai avant le début du tween une fois ce dernier activé
@@ -176,7 +179,7 @@ export default class niveau4 extends Phaser.Scene {
       }
   
       if (this.clavier.up.isDown && this.player.body.blocked.down) {
-        this.player.setVelocityY(-20);
+        this.player.setVelocityY(-250);
       }
  
   
@@ -216,5 +219,23 @@ export default class niveau4 extends Phaser.Scene {
         this.tween_mouvement.resume();  // on relance le tween
         this.bloquage = false;
       }
+
+      if (this.player.body.blocked.down) {
+        var t = this.Plateforme.getTileAtWorldXY(this.player.x, this.player.y+30);
+        if (t!=null && t.index == 11076) this.gameOver=true;
+        if (t!=null && t.index == 11077) this.gameOver=true;
     }
+    
+    if (this.gameOver) {
+      this.player.setPosition(440, 0);
+      this.gameOver = false;
+      this.vie=this.vie-1;
+      this.text.setText("Il vous reste " + this.vie + " vie(s)");
+    }
+    
+    if (this.vie==0){
+      this.vie=3;
+      this.scene.start("fin")
+    }
+}
 }
