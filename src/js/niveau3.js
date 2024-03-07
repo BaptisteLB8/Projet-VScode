@@ -119,7 +119,7 @@ this.physics.add.collider(this.player, this.Sol );
 this.groupe_plateformes = this.physics.add.staticGroup();
 
 this.light = this.lights.addLight(600, 300, 300);
-this.light.setIntensity(1); 
+this.light.setIntensity(2); 
 this.light.setRadius(700);
 this.lights.enable().setAmbientColor(0x000000);
 
