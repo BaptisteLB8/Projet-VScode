@@ -262,6 +262,7 @@ this.bouton_indice3= this.add.image(680, 35, "icone_indice3").setDepth(101).setD
 
     this.bouton_passer3.on("pointerup", () => {
       this.scene.start("niveau4");
+      this.music.stop();
   });
 
   }

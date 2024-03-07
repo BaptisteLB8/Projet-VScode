@@ -320,6 +320,7 @@ this.bouton_passer2 = this.add.image(700, 550, "doublefleche2").setDepth(1).setD
 
     this.bouton_passer2.on("pointerup", () => {
       this.scene.start("niveau3");
+      this.music.stop();
   });
 
 
