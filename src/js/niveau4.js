@@ -34,7 +34,7 @@ export default class niveau4 extends Phaser.Scene {
       this.load.image('4_indice1', 'src/assets/Niveau4_Indice1.png'); 
     this.load.image('4_indice2', 'src/assets/Niveau4_Indice2.png'); 
     this.load.image('4_indice3', 'src/assets/Niveau4_Indice3.png'); 
-    this.load.image('icone_indice', 'src/assets/indiceb.png'); 
+    this.load.image('icone_indice', 'src/assets/indicen.png'); 
     this.load.image('fleche', 'src/assets/flecheretourb.png'); 
 
 
@@ -209,11 +209,13 @@ export default class niveau4 extends Phaser.Scene {
 
   this.bouton_indice4.on("pointerup", () => {
     if (this.nb_aide==0) {
+      this.bouton_indice4.setVisible(false);
     this.physics.pause();
     this.image_14=this.add.image(450, 300, "4_indice1").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
     this.bouton_retour14= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_retour14.setInteractive();
     this.bouton_retour14.on("pointerup", () => {
+      this.bouton_indice4.setVisible(true);
     this.image_14.destroy();
     this.nb_aide=1;
     this.physics.resume();
@@ -221,22 +223,26 @@ export default class niveau4 extends Phaser.Scene {
    });
   }
     if (this.nb_aide==1) {
+      this.bouton_indice4.setVisible(false);
       this.physics.pause();
       this.image_24=this.add.image(450, 300, "4_indice2").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
     this.bouton_retour24= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_retour24.setInteractive();
     this.bouton_retour24.on("pointerup", () => {
+      this.bouton_indice4.setVisible(true);
     this.image_24.destroy();
     this.nb_aide=2;
     this.physics.resume();
     this.bouton_retour24.destroy();
   });
     } if (this.nb_aide==2){
+      this.bouton_indice4.setVisible(false);
       this.physics.pause();
       this.image_34=this.add.image(450, 300, "4_indice3").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
       this.bouton_retour34= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour34.setInteractive();
       this.bouton_retour34.on("pointerup", () => {
+        this.bouton_indice4.setVisible(true);
       this.image_34.destroy();
       this.nb_aide=0;
       this.physics.resume();
@@ -273,6 +279,7 @@ export default class niveau4 extends Phaser.Scene {
           if (this.physics.overlap(this.player, this.porte_retour)) {
               console.log("niveau 4 : retour vers selection");
               this.scene.start("fin");
+              this.music.stop();
           }
       }
   
@@ -321,8 +328,9 @@ export default class niveau4 extends Phaser.Scene {
     }
     
     if (this.vie==0){
-      this.vie=3;
+      this.vie=10;
       this.scene.start("fin")
+      this.music.stop();
     }
 
     if (this.clavier.space.isDown && this.physics.overlap(this.player, this.porte_retour2)) {
@@ -331,7 +339,9 @@ export default class niveau4 extends Phaser.Scene {
         // Marquer la porte comme contactée
         this.porteContactee = true;
         // Rediriger vers la scène de sélection
-        this.scene.start("fin");
+        this.scene.start("commandes");
+        this.music.stop();
+        this.vie=5;
       }
     } else {
       // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur

@@ -9,7 +9,7 @@ export default class niveau3 extends Phaser.Scene {
     this.clavier = null;
     this.gameOver=null;
     this.light = null; 
-    this.vie=3;
+    this.vie=5;
     this.zone_texte_score;
     this.text=null;
     this.rocher;
@@ -33,6 +33,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image('3_indice3', 'src/assets/Niveau3_Indice3.png'); 
     this.load.image('icone_indice3', 'src/assets/indiceb.png'); 
     this.load.image('fleche3', 'src/assets/flecheretourb.png'); 
+    this.load.image('doublefleche3', 'src/assets/doubleflecheb.png'); 
 
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
@@ -206,11 +207,15 @@ this.bouton_indice3= this.add.image(680, 35, "icone_indice3").setDepth(101).setD
 
     this.bouton_indice3.on("pointerup", () => {
       if (this.nb_aide==0) {
+        this.bouton_indice3.setVisible(false);
+        this.bouton_passer3.setVisible(false);
       this.physics.pause();
       this.image_13=this.add.image(400, 300, "3_indice1").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
       this.bouton_retour13= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour13.setInteractive();
       this.bouton_retour13.on("pointerup", () => {
+        this.bouton_indice3.setVisible(true);
+        this.bouton_passer3.setVisible(true);
       this.image_13.destroy();
       this.nb_aide=1;
       this.physics.resume();
@@ -218,28 +223,45 @@ this.bouton_indice3= this.add.image(680, 35, "icone_indice3").setDepth(101).setD
      });
     }
       if (this.nb_aide==1) {
+        this.bouton_passer3.setVisible(false);
+        this.bouton_indice3.setVisible(false);
         this.physics.pause();
         this.image_23=this.add.image(400, 300, "3_indice2").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
       this.bouton_retour23= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour23.setInteractive();
       this.bouton_retour23.on("pointerup", () => {
+        this.bouton_indice3.setVisible(true);
+        this.bouton_passer3.setVisible(true);
       this.image_23.destroy();
       this.nb_aide=2;
       this.physics.resume();
       this.bouton_retour23.destroy();
     });
       } if (this.nb_aide==2){
+        this.bouton_indice3.setVisible(false);
+        this.bouton_passer3.setVisible(false);
         this.physics.pause();
         this.image_33=this.add.image(400, 300, "3_indice3").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
         this.bouton_retour33= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
         this.bouton_retour33.setInteractive();
         this.bouton_retour33.on("pointerup", () => {
+          this.bouton_indice3.setVisible(true);
+          this.bouton_passer3.setVisible(true);
         this.image_33.destroy();
         this.nb_aide=0;
         this.physics.resume();
         this.bouton_retour33.destroy();
       });
       }
+  });
+
+
+
+  this.bouton_passer3 = this.add.image(700, 550, "doublefleche3").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_passer3.setInteractive();
+
+    this.bouton_passer3.on("pointerup", () => {
+      this.scene.start("niveau4");
   });
 
   }
@@ -282,8 +304,9 @@ if (this.gameOver) {
 }
 
 if (this.vie==0){
-  this.vie=3;
-  this.scene.start("niveau4")
+  this.vie=5;
+  this.scene.start("fin")
+  this.music.stop();
 }
 
   // Déplacements du joueur
@@ -300,6 +323,8 @@ if (this.vie==0){
       this.porteContactee = true;
       // Rediriger vers la scène de sélection
       this.scene.start("niveau4");
+      this.music.stop();
+      this.vie=5;
     }
   } else {
     // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur

@@ -10,7 +10,7 @@ export default class niveau2 extends Phaser.Scene {
     this.clavier = null;
     this.projectiles = null; 
     this.gameOver = null;
-    this.vie = 3;
+    this.vie = 5;
     this.text = null;
     this.boule=null;
     this.groupeBullets=null; 
@@ -43,6 +43,7 @@ export default class niveau2 extends Phaser.Scene {
       this.load.image('2_indice3', 'src/assets/Niveau2_Indice3.png'); 
       this.load.image('icone_indice', 'src/assets/indicen.png'); 
       this.load.image('fleche', 'src/assets/flecheretour.png'); 
+      this.load.image('doublefleche2', 'src/assets/doublefleche.png'); 
   }
 
   create() {
@@ -216,7 +217,7 @@ this.text = this.add.text(
  this.porteContactee =false;
 
  this.porte_retour = this.physics.add.sprite(5984, 576, "porte").setDisplaySize(64, 96).setDepth(-100);
- this.player.x=5984;
+
  this.porte_retour.body.allowGravity = false;
     this.physics.add.collider(this.projectiles, niveau_neige, this.projectileCollision, null, this);
     this.physics.add.collider(this.projectiles, blocs_caches, this.projectileCollision, null, this);
@@ -265,11 +266,15 @@ this.music = this.sound.add('bgniveau2');
 
   this.bouton_indice2.on("pointerup", () => {
     if (this.nb_aide==0) {
+      this.bouton_indice2.setVisible(false);
+      this.bouton_passer2.setVisible(false);
     this.physics.pause();
     this.image_12=this.add.image(450, 300, "2_indice1").setDepth(101).setDisplaySize(400, 500).setScrollFactor(0);
     this.bouton_retour12= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_retour12.setInteractive();
     this.bouton_retour12.on("pointerup", () => {
+      this.bouton_indice2.setVisible(true);
+      this.bouton_passer2.setVisible(true);
     this.image_12.destroy();
     this.nb_aide=1;
     this.physics.resume();
@@ -277,22 +282,30 @@ this.music = this.sound.add('bgniveau2');
    });
   }
     if (this.nb_aide==1) {
+      this.bouton_indice2.setVisible(false);
+      this.bouton_passer2.setVisible(false);
       this.physics.pause();
       this.image_22=this.add.image(450, 300, "2_indice2").setDepth(101).setDisplaySize(400, 500).setScrollFactor(0);
     this.bouton_retour22= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_retour22.setInteractive();
     this.bouton_retour22.on("pointerup", () => {
+      this.bouton_indice2.setVisible(true);
+      this.bouton_passer2.setVisible(true);
     this.image_22.destroy();
     this.nb_aide=2;
     this.physics.resume();
     this.bouton_retour22.destroy();
   });
     } if (this.nb_aide==2){
+      this.bouton_indice2.setVisible(false);
+      this.bouton_passer2.setVisible(false);
       this.physics.pause();
       this.image_32=this.add.image(450, 300, "2_indice3").setDepth(101).setDisplaySize(400, 500).setScrollFactor(0);
       this.bouton_retour32= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour32.setInteractive();
       this.bouton_retour32.on("pointerup", () => {
+        this.bouton_indice2.setVisible(true);
+        this.bouton_passer2.setVisible(true);
       this.image_32.destroy();
       this.nb_aide=0;
       this.physics.resume();
@@ -300,6 +313,14 @@ this.music = this.sound.add('bgniveau2');
     });
     }
 });
+
+
+this.bouton_passer2 = this.add.image(700, 550, "doublefleche2").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_passer2.setInteractive();
+
+    this.bouton_passer2.on("pointerup", () => {
+      this.scene.start("niveau3");
+  });
 
 
 
@@ -322,11 +343,13 @@ this.music = this.sound.add('bgniveau2');
       this.vie--; // Décrémentez le nombre de vies
       this.text.setText("Il vous reste " + this.vie + " vie(s)"); // Mettez à jour le texte affichant le nombre de vies
       if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
+        this.music.stop();
         this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
 
         if (this.vie==0){
-          this.vie=4;
+          this.vie=5;
           this.scene.start("fin")
+          this.music.stop();
         }
       } else {
         this.player.setPosition(416, 576); // Réinitialisez la position du joueur
@@ -344,6 +367,7 @@ this.music = this.sound.add('bgniveau2');
           this.porteContactee = true;
           // Rediriger vers le menu de sélection
           this.scene.start("niveau3"); 
+          this.music.stop();
           this.porteContactee = false;
           // Remplacez "nom_de_votre_scene_de_menu" par le nom de votre scène de menu
       }

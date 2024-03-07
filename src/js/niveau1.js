@@ -7,7 +7,7 @@ export default class niveau1 extends Phaser.Scene {
     this.groupe_plateformes = null;
     this.clavier = null;
     this.gameOver = null;
-    this.vie = 3;
+    this.vie = 5;
     this.text = null;
     this.grossissement = 0.7;
     this.levier = null; 
@@ -37,6 +37,7 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image('1_indice3', 'src/assets/Niveau1_Indice3.png'); 
     this.load.image('icone_indice', 'src/assets/indicen.png'); 
     this.load.image('fleche', 'src/assets/flecheretour.png'); 
+    this.load.image('doublefleche1', 'src/assets/doublefleche.png'); 
 
   }
 
@@ -196,11 +197,15 @@ this.music = this.sound.add('bgniveau1');
 
   this.bouton_indice1.on("pointerup", () => {
     if (this.nb_aide==0) {
+      this.bouton_indice1.setVisible(false);
+      this.bouton_passer1.setVisible(false);
     this.physics.pause();
     this.image_11=this.add.image(450, 300, "1_indice1").setDepth(101).setDisplaySize(200, 300).setScrollFactor(0);
     this.bouton_retour11= this.add.image(750, 400, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_retour11.setInteractive();
     this.bouton_retour11.on("pointerup", () => {
+      this.bouton_indice1.setVisible(true);
+      this.bouton_passer1.setVisible(true);
     this.image_11.destroy();
     this.nb_aide=1;
     this.physics.resume();
@@ -208,22 +213,30 @@ this.music = this.sound.add('bgniveau1');
    });
   }
     if (this.nb_aide==1) {
+      this.bouton_passer1.setVisible(false);
+      this.bouton_indice1.setVisible(false);
       this.physics.pause();
       this.image_21=this.add.image(450, 300, "1_indice2").setDepth(101).setDisplaySize(200, 300).setScrollFactor(0);
     this.bouton_retour21= this.add.image(750, 400, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
     this.bouton_retour21.setInteractive();
     this.bouton_retour21.on("pointerup", () => {
+      this.bouton_indice1.setVisible(true);
+      this.bouton_passer1.setVisible(true);
     this.image_21.destroy();
     this.nb_aide=2;
     this.physics.resume();
     this.bouton_retour21.destroy();
   });
     } if (this.nb_aide==2){
+      this.bouton_indice1.setVisible(false);
+      this.bouton_passer1.setVisible(false);
       this.physics.pause();
       this.image_31=this.add.image(450, 300, "1_indice3").setDepth(101).setDisplaySize(200, 300).setScrollFactor(0);
       this.bouton_retour31= this.add.image(750, 400, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
       this.bouton_retour31.setInteractive();
       this.bouton_retour31.on("pointerup", () => {
+        this.bouton_indice1.setVisible(true);
+        this.bouton_passer1.setVisible(true);
       this.image_31.destroy();
       this.nb_aide=0;
       this.physics.resume();
@@ -233,6 +246,12 @@ this.music = this.sound.add('bgniveau1');
 });
 
 
+this.bouton_passer1 = this.add.image(700, 450, "doublefleche1").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_passer1.setInteractive();
+
+    this.bouton_passer1.on("pointerup", () => {
+      this.scene.start("niveau2");
+  });
 
 
   }
@@ -272,11 +291,13 @@ this.music = this.sound.add('bgniveau1');
 
       if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
         this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
-        this.vie=4;
+        this.vie=5;
+        this.music.stop();
 
         if (this.vie==0){
-          this.vie=4;
+          this.vie=5;
           this.scene.start("fin")
+          this.music.stop();
         }
       } else {
         this.player.setPosition(0, 0); // Réinitialisez la position du joueur
@@ -296,6 +317,7 @@ this.music = this.sound.add('bgniveau1');
         this.scene.switch("niveau2");
         this.affichage=1;
         this.music.stop();
+        this.vie=5;
       }
     }
     } else {
