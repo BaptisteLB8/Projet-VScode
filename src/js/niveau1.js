@@ -93,7 +93,7 @@ export default class niveau1 extends Phaser.Scene {
         child.setScale(0.07); // Réglez la valeur de l'échelle selon vos besoins
     });
     this.physics.add.collider(mzelda, calque_plateformes);
-    this.physics.add.collider(this.player, mzelda, this.chocAvecmzelda, null, this);
+    this.physics.add.overlap(this.player, mzelda, this.chocAvecmzelda, null, this);
     this.projectiles = this.physics.add.group();
 
     mzelda.children.iterate((mzelda) => {
@@ -211,7 +211,7 @@ this.music = this.sound.add('bgniveau1');
         this.levier.flipX = false; // on tourne l'image du levier
         this.tween_mouvement.stop();  // on relance le tween
         this.bloquage=true;
-        
+
         var caillou_mobile = this.physics.add.sprite(
           993,
           107,
