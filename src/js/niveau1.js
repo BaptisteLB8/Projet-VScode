@@ -280,7 +280,7 @@ this.bouton_passer1 = this.add.image(700, 450, "doublefleche1").setDepth(1).setD
         this.levier.flipX = false; // on tourne l'image du levier
         this.tween_mouvement.stop();  // on relance le tween
         this.bloquage=true;
-        
+
         var caillou_mobile = this.physics.add.sprite(
           993,
           107,
