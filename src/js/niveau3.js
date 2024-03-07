@@ -9,20 +9,32 @@ export default class niveau3 extends Phaser.Scene {
     this.clavier = null;
     this.gameOver=null;
     this.light = null; 
-    this.vie=3;
+    this.vie=5;
     this.zone_texte_score;
     this.text=null;
+    this.rocher;
+    this.deuxiemeRocher; 
+    this.nb_aide=0;
+    
   }
 
   preload() {
-    this.load.image("tuilesdejeu", "src/assets/tuiles.png")
-    this.load.image("tuilesdejeu2", "src/assets/ground.png")
+    this.load.image("tuilesdejeuT", "src/assets/tuiles.png")
+    this.load.image("tuilesdejeu2T", "src/assets/ground.png")
     this.load.image("tuilesdejeu3", "src/assets/nuit.jpg")
-    this.load.tilemapTiledJSON("carte", "src/assets/map_niveau3.tmj");
+    this.load.tilemapTiledJSON("carte3", "src/assets/map_niveau3.tmj");
     this.load.image('soundon2', 'src/assets/SoundOn.png'); 
     this.load.image('soundoff2', 'src/assets/SoundOff.png'); 
     this.load.image('porte_retour', 'src/assets/door3.png'); 
     this.load.audio('bgniveau3', 'src/assets/niveau3.mp3');
+    this.load.image("rocher", "src/assets/pierre.png");
+    this.load.image('3_indice1', 'src/assets/Niveau3_Indice1.png'); 
+    this.load.image('3_indice2', 'src/assets/Niveau3_Indice2.png'); 
+    this.load.image('3_indice3', 'src/assets/Niveau3_Indice3.png'); 
+    this.load.image('icone_indice3', 'src/assets/indiceb.png'); 
+    this.load.image('fleche3', 'src/assets/flecheretourb.png'); 
+    this.load.image('doublefleche3', 'src/assets/doubleflecheb.png'); 
+
 
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -42,6 +54,8 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setScale(grossisment);
     this.clavier = this.input.keyboard.createCursorKeys(); 
     this.player.setPipeline('Light2D');
+    
+    
     
 
     this.anims.create({
@@ -64,32 +78,36 @@ export default class niveau3 extends Phaser.Scene {
       frameRate: 20
     });
 
-    const map = this.add.tilemap("carte");
+    const map3 = this.add.tilemap("carte3");
 
-    const ts1 = map.addTilesetImage("Paysan", "tuilesdejeu");
-    const ts2 = map.addTilesetImage("Fond", "tuilesdejeu2");
-    const ts3 = map.addTilesetImage("Background", "tuilesdejeu3");
-    const Background = map.createLayer("Background", [ts1, ts2, ts3]);
 
-    const Transparent_solide = map.createLayer("Transparent_solide", [ts1, ts2, ts3]);
-    const Sol = map.createLayer("Sol", [ts1, ts2, ts3]);
-    const Pas_solide = map.createLayer("Pas_solide", [ts1, ts2, ts3]);
-    this.Solide_premier_plan = map.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
-    const Decoration = map.createLayer("Decoration", [ts1, ts2, ts3]);
+
     
 
-Transparent_solide.setCollisionByProperty({ estSolide: true }); 
-Pas_solide.setCollisionByProperty({ estSolide: false }); 
+    const ts1 = map3.addTilesetImage("Paysan", "tuilesdejeuT");
+    const ts2 = map3.addTilesetImage("Fond", "tuilesdejeu2T");
+    const ts3 = map3.addTilesetImage("Background", "tuilesdejeu3");
+    this.Background = map3.createLayer("Background", [ts1, ts2, ts3]);
+
+    this.Transparent_solide = map3.createLayer("Transparent_solide", [ts1, ts2, ts3]);
+    this.Sol = map3.createLayer("Sol", [ts1, ts2, ts3]);
+    this.Pas_solide = map3.createLayer("Pas_solide", [ts1, ts2, ts3]);
+    this.Solide_premier_plan = map3.createLayer("Solide_premier_plan", [ts1, ts2, ts3]);
+    this.Decoration = map3.createLayer("Decoration", [ts1, ts2, ts3]);
+    
+
+this.Transparent_solide.setCollisionByProperty({ estSolide: true }); 
+this.Pas_solide.setCollisionByProperty({ estSolide: false }); 
 this.Solide_premier_plan.setCollisionByProperty({ estSolide : true});
-Decoration.setCollisionByProperty({ estSolide : false});
-Background.setCollisionByProperty({ estSolide : false});
-Sol.setCollisionByProperty({ estSolide : true});
+this.Decoration.setCollisionByProperty({ estSolide : false});
+this.Background.setCollisionByProperty({ estSolide : false});
+this.Sol.setCollisionByProperty({ estSolide : true});
 
 
 // ajout d'une collision entre le joueur et le calque plateformes
 this.physics.add.collider(this.player, this.Solide_premier_plan ); 
-this.physics.add.collider(this.player, Transparent_solide ); 
-this.physics.add.collider(this.player, Sol ); 
+this.physics.add.collider(this.player, this.Transparent_solide ); 
+this.physics.add.collider(this.player, this.Sol ); 
 
     // redimentionnement du monde avec les dimensions calculées via tiled
     this.physics.world.setBounds(0, 0, 3200, 768);
@@ -101,22 +119,23 @@ this.physics.add.collider(this.player, Sol );
 this.groupe_plateformes = this.physics.add.staticGroup();
 
 this.light = this.lights.addLight(600, 300, 300);
-this.light.setIntensity(2); 
+this.light.setIntensity(1); 
 this.light.setRadius(700);
 this.lights.enable().setAmbientColor(0x000000);
 
-Background.setPipeline('Light2D');
-Transparent_solide.setPipeline('Light2D');
-Decoration.setPipeline('Light2D');
-Sol.setPipeline('Light2D');
+this.Background.setPipeline('Light2D');
+this.Transparent_solide.setPipeline('Light2D');
+this.Decoration.setPipeline('Light2D');
+this.Sol.setPipeline('Light2D');
 this.Solide_premier_plan.setPipeline('Light2D');   
-Pas_solide.setPipeline('Light2D'); 
+this.Pas_solide.setPipeline('Light2D'); 
+
 
 
 this.text = this.add.text(
   16, // Coordonnée X par rapport à la caméra
   16, // Coordonnée Y par rapport à la caméra
-  "IL vous reste " + this.vie + " vie(s)",
+  "Il vous reste " + this.vie + " vie(s)",
   {
     fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
     fontSize: "22pt",
@@ -150,6 +169,100 @@ this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDispla
       }
   });
 
+    this.rocher = this.physics.add.image(2190, 100, 'rocher');
+    this.rocher.setCollideWorldBounds(true);
+    this.rocher.setInteractive(); // Rend le rocher interactif pour le déplacement
+    this.physics.add.collider(this.rocher, this.Sol); // Ajoutez une collision avec les plateformes
+    this.physics.add.collider(this.rocher, this.Solide_premier_plan);
+    this.physics.add.collider(this.rocher, this.player); // Ajoutez une collision avec les plateformes
+    this.rocher.setScale(0.1);
+    //this.rocher.setAcceleration(0);
+    this.rocher.setMass(1);
+    this.rocher.setFrictionX(0.5);
+
+    this.rocher.setPushable(true); // Vous pouvez ajuster le nombre selon vos besoins
+    this.rocher.body.maxVelocity.x = 0.1;
+    //this.rocher.body.setImmovable (true);
+    
+    this.physics.add.collider(this.rocher, this.groupe_plateformes, null, null, this);
+
+
+this.deuxiemeRocher = this.physics.add.sprite(2687, 300, 'rocher');
+this.deuxiemeRocher.setCollideWorldBounds(true);
+this.deuxiemeRocher.setInteractive(); // Rend le rocher interactif pour le déplacement
+this.physics.add.collider(this.deuxiemeRocher, this.Sol); // Ajoutez une collision avec les plateformes
+this.physics.add.collider(this.deuxiemeRocher, this.Solide_premier_plan);
+this.physics.add.collider(this.deuxiemeRocher, this.player); // Ajoutez une collision avec le joueur
+this.deuxiemeRocher.setScale(0.1);
+    //this.rocher.setAcceleration(0);
+    this.deuxiemeRocher.setMass(1);
+    this.deuxiemeRocher.setFrictionX(0.5);
+
+    this.deuxiemeRocher.setPushable(true); // Vous pouvez ajuster le nombre selon vos besoins
+    this.deuxiemeRocher.body.maxVelocity.x = 0.1;
+this.physics.add.collider(this.deuxiemeRocher, this.groupe_plateformes, null, null, this);
+
+this.bouton_indice3= this.add.image(680, 35, "icone_indice3").setDepth(101).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_indice3.setInteractive();
+
+    this.bouton_indice3.on("pointerup", () => {
+      if (this.nb_aide==0) {
+        this.bouton_indice3.setVisible(false);
+        this.bouton_passer3.setVisible(false);
+      this.physics.pause();
+      this.image_13=this.add.image(400, 300, "3_indice1").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
+      this.bouton_retour13= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour13.setInteractive();
+      this.bouton_retour13.on("pointerup", () => {
+        this.bouton_indice3.setVisible(true);
+        this.bouton_passer3.setVisible(true);
+      this.image_13.destroy();
+      this.nb_aide=1;
+      this.physics.resume();
+      this.bouton_retour13.destroy();
+     });
+    }
+      if (this.nb_aide==1) {
+        this.bouton_passer3.setVisible(false);
+        this.bouton_indice3.setVisible(false);
+        this.physics.pause();
+        this.image_23=this.add.image(400, 300, "3_indice2").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
+      this.bouton_retour23= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour23.setInteractive();
+      this.bouton_retour23.on("pointerup", () => {
+        this.bouton_indice3.setVisible(true);
+        this.bouton_passer3.setVisible(true);
+      this.image_23.destroy();
+      this.nb_aide=2;
+      this.physics.resume();
+      this.bouton_retour23.destroy();
+    });
+      } if (this.nb_aide==2){
+        this.bouton_indice3.setVisible(false);
+        this.bouton_passer3.setVisible(false);
+        this.physics.pause();
+        this.image_33=this.add.image(400, 300, "3_indice3").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
+        this.bouton_retour33= this.add.image(750, 550, "fleche3").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+        this.bouton_retour33.setInteractive();
+        this.bouton_retour33.on("pointerup", () => {
+          this.bouton_indice3.setVisible(true);
+          this.bouton_passer3.setVisible(true);
+        this.image_33.destroy();
+        this.nb_aide=0;
+        this.physics.resume();
+        this.bouton_retour33.destroy();
+      });
+      }
+  });
+
+
+
+  this.bouton_passer3 = this.add.image(700, 550, "doublefleche3").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_passer3.setInteractive();
+
+    this.bouton_passer3.on("pointerup", () => {
+      this.scene.start("niveau4");
+  });
 
   }
 
@@ -169,7 +282,7 @@ this.porte_retour = this.physics.add.sprite(3145, 230, "porte_retour").setDispla
     }
 
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
-      this.player.setVelocityY(-320);
+      this.player.setVelocityY(-315);
     }
 if (this.player.body.blocked.down) {
     var t = this.Solide_premier_plan.getTileAtWorldXY(this.player.x, this.player.y+30);
@@ -183,12 +296,17 @@ if (this.gameOver) {
   this.player.setPosition(0, 0);
   this.gameOver = false;
   this.vie=this.vie-1;
-  this.text.setText("IL vous reste " + this.vie + " vie(s)");
+  this.text.setText("Il vous reste " + this.vie + " vie(s)");
+  this.rocher.setPosition(2190, 100);
+  this.deuxiemeRocher.setPosition(2687, 300);
+
+  
 }
 
 if (this.vie==0){
-  this.vie=3;
+  this.vie=5;
   this.scene.start("fin")
+  this.music.stop();
 }
 
   // Déplacements du joueur
@@ -204,7 +322,9 @@ if (this.vie==0){
       // Marquer la porte comme contactée
       this.porteContactee = true;
       // Rediriger vers la scène de sélection
-      this.scene.start("selection");
+      this.scene.start("niveau4");
+      this.music.stop();
+      this.vie=5;
     }
   } else {
     // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
@@ -217,7 +337,6 @@ if (this.vie==0){
   
   // Mise à jour de la position du texte
  
-
 
 }
 }

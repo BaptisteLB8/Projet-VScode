@@ -10,17 +10,21 @@ export default class niveau2 extends Phaser.Scene {
     this.clavier = null;
     this.projectiles = null; 
     this.gameOver = null;
-    this.vie = 3;
+    this.vie = 5;
     this.text = null;
     this.boule=null;
     this.groupeBullets=null; 
+<<<<<<< HEAD
+=======
+    this.nb_aide=0;
+>>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
   }
   // mise en place d'une variable groupeCibles
   preload() {
     this.load.image("tuilesdejeu","src/assets/BG_neige.png")
     this.load.image("tuilesdejeu2","src/assets/Tileset_neige.png")
     
-    this.load.tilemapTiledJSON("carte","src/assets/map_neige.tmj")
+    this.load.tilemapTiledJSON("carte2","src/assets/map_neige.tmj")
     
     this.load.spritesheet("img_perso", "src/assets/farmer.png", {
       frameWidth: 45,
@@ -33,6 +37,19 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image('porte', 'src/assets/door3.png');
     this.load.image('feunard','src/assets/feunard.png');
     this.load.image('feu','src/assets/feu.png');
+<<<<<<< HEAD
+=======
+    this.load.audio('bgniveau2', 'src/assets/niveau2.mp3');
+    this.load.image('soundon3', 'src/assets/SoundOn2.png'); 
+      this.load.image('soundoff3', 'src/assets/SoundOff2.png');
+
+      this.load.image('2_indice1', 'src/assets/Niveau2_Indice1.png'); 
+      this.load.image('2_indice2', 'src/assets/Niveau2_Indice2.png'); 
+      this.load.image('2_indice3', 'src/assets/Niveau2_Indice3.png'); 
+      this.load.image('icone_indice', 'src/assets/indicen.png'); 
+      this.load.image('fleche', 'src/assets/flecheretour.png'); 
+      this.load.image('doublefleche2', 'src/assets/doublefleche.png'); 
+>>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
   }
 
   create() {
@@ -65,15 +82,15 @@ export default class niveau2 extends Phaser.Scene {
       frameRate: 20
     });
 
-    const map = this.add.tilemap("carte");
+    const map2 = this.add.tilemap("carte2");
 
-    const ts1 = map.addTilesetImage("BG", "tuilesdejeu");
-    const ts2 = map.addTilesetImage("Tileset neige", "tuilesdejeu2");
+    const ts1 = map2.addTilesetImage("BG", "tuilesdejeu");
+    const ts2 = map2.addTilesetImage("Tileset neige", "tuilesdejeu2");
 
-    const Background = map.createLayer("Background", [ts1, ts2]);
-    const Decor = map.createLayer("Decor", [ts1, ts2]);
-    const niveau_neige = map.createLayer("niveau_neige", [ts1, ts2]);
-    const blocs_caches = map.createLayer("blocs_caches", [ts1, ts2]);
+    const Background = map2.createLayer("Background", [ts1, ts2]);
+    const Decor = map2.createLayer("Decor", [ts1, ts2]);
+    const niveau_neige = map2.createLayer("niveau_neige", [ts1, ts2]);
+    const blocs_caches = map2.createLayer("blocs_caches", [ts1, ts2]);
 
     Background.setCollisionByProperty({ estSolide: false });
     Decor.setCollisionByProperty({ estSolide: false });
@@ -206,6 +223,10 @@ this.text = this.add.text(
  this.porteContactee =false;
 
  this.porte_retour = this.physics.add.sprite(5984, 576, "porte").setDisplaySize(64, 96).setDepth(-100);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
  this.porte_retour.body.allowGravity = false;
     this.physics.add.collider(this.projectiles, niveau_neige, this.projectileCollision, null, this);
     this.physics.add.collider(this.projectiles, blocs_caches, this.projectileCollision, null, this);
@@ -226,7 +247,97 @@ this.physics.add.overlap(this.groupeBullets, farfurets, this.collisionFeuEnnemi,
 this.physics.add.overlap(this.groupeBullets, feunards, this.collisionFeuEnnemi, null, this);
 this.physics.add.overlap(this.groupeBullets, this.projectiles, this.collisionFeuEnnemi, null, this);
 
+<<<<<<< HEAD
   }
+=======
+this.music = this.sound.add('bgniveau2');
+    this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
+
+
+    this.bouton_SoundOn = this.add.image(750, 35, "soundon3").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_SoundOn.setInteractive();
+    this.music.play();
+    this.musicPlaying=true;
+
+    this.bouton_SoundOn.on("pointerup", () => {
+      if (this.musicPlaying) {
+          this.music.stop(); // Arrêter la musique
+          this.bouton_SoundOn.setTexture("soundoff3").setDisplaySize(40, 40); // Changer le bouton en Sound Off
+          this.musicPlaying = false; // Mettre à jour le statut de la musique
+      } else {
+          this.music.play(); // Reprendre la musique
+          this.bouton_SoundOn.setTexture("soundon3").setDisplaySize(60, 45); // Changer le bouton en Sound On
+          this.musicPlaying = true; // Mettre à jour le statut de la musique
+      }
+  });
+
+
+
+  this.bouton_indice2= this.add.image(680, 35, "icone_indice").setDepth(101).setDisplaySize(60, 45).setScrollFactor(0);
+  this.bouton_indice2.setInteractive();
+
+  this.bouton_indice2.on("pointerup", () => {
+    if (this.nb_aide==0) {
+      this.bouton_indice2.setVisible(false);
+      this.bouton_passer2.setVisible(false);
+    this.physics.pause();
+    this.image_12=this.add.image(450, 300, "2_indice1").setDepth(101).setDisplaySize(400, 500).setScrollFactor(0);
+    this.bouton_retour12= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_retour12.setInteractive();
+    this.bouton_retour12.on("pointerup", () => {
+      this.bouton_indice2.setVisible(true);
+      this.bouton_passer2.setVisible(true);
+    this.image_12.destroy();
+    this.nb_aide=1;
+    this.physics.resume();
+    this.bouton_retour12.destroy();
+   });
+  }
+    if (this.nb_aide==1) {
+      this.bouton_indice2.setVisible(false);
+      this.bouton_passer2.setVisible(false);
+      this.physics.pause();
+      this.image_22=this.add.image(450, 300, "2_indice2").setDepth(101).setDisplaySize(400, 500).setScrollFactor(0);
+    this.bouton_retour22= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_retour22.setInteractive();
+    this.bouton_retour22.on("pointerup", () => {
+      this.bouton_indice2.setVisible(true);
+      this.bouton_passer2.setVisible(true);
+    this.image_22.destroy();
+    this.nb_aide=2;
+    this.physics.resume();
+    this.bouton_retour22.destroy();
+  });
+    } if (this.nb_aide==2){
+      this.bouton_indice2.setVisible(false);
+      this.bouton_passer2.setVisible(false);
+      this.physics.pause();
+      this.image_32=this.add.image(450, 300, "2_indice3").setDepth(101).setDisplaySize(400, 500).setScrollFactor(0);
+      this.bouton_retour32= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour32.setInteractive();
+      this.bouton_retour32.on("pointerup", () => {
+        this.bouton_indice2.setVisible(true);
+        this.bouton_passer2.setVisible(true);
+      this.image_32.destroy();
+      this.nb_aide=0;
+      this.physics.resume();
+      this.bouton_retour32.destroy();
+    });
+    }
+});
+
+
+this.bouton_passer2 = this.add.image(700, 550, "doublefleche2").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_passer2.setInteractive();
+
+    this.bouton_passer2.on("pointerup", () => {
+      this.scene.start("niveau3");
+  });
+
+
+
+  }
+>>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
   
 
   update() {
@@ -245,11 +356,13 @@ this.physics.add.overlap(this.groupeBullets, this.projectiles, this.collisionFeu
       this.vie--; // Décrémentez le nombre de vies
       this.text.setText("Il vous reste " + this.vie + " vie(s)"); // Mettez à jour le texte affichant le nombre de vies
       if (this.vie <= 0) { // Si le joueur n'a plus qu'une seule vie
+        this.music.stop();
         this.scene.start("fin"); // Redirigez vers la scène de fin de jeu
 
         if (this.vie==0){
-          this.vie=4;
+          this.vie=5;
           this.scene.start("fin")
+          this.music.stop();
         }
       } else {
         this.player.setPosition(416, 576); // Réinitialisez la position du joueur
@@ -266,7 +379,8 @@ this.physics.add.overlap(this.groupeBullets, this.projectiles, this.collisionFeu
           // Marquer la porte comme contactée
           this.porteContactee = true;
           // Rediriger vers le menu de sélection
-          this.scene.start("selection"); 
+          this.scene.start("niveau3"); 
+          this.music.stop();
           this.porteContactee = false;
           // Remplacez "nom_de_votre_scene_de_menu" par le nom de votre scène de menu
       }

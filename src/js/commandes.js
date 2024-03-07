@@ -8,21 +8,15 @@ export default class commandes extends Phaser.Scene {
     });
   }
   preload() {
-this.load.image('livre', 'src/assets/book.png'); 
-this.load.image('retour1', 'src/assets/retour.png'); 
+this.load.image('victoire', 'src/assets/Fenetre_victoire.png'); 
 
   }
 
   create() {
     fct.doNothing();
     fct.doAlsoNothing();
-    this.add.image(0, 0, "livre").setOrigin(0).setDepth(0).setDisplaySize(800, 600);
-    var bouton_return = this.add.image (650,565,"retour1").setDepth(1).setDisplaySize(50, 50);
-    bouton_return.setInteractive();
-    bouton_return.on("pointerup", () => {
-      this.scene.start("selection");
-    });
-    
+    this.add.image(0, 0, "victoire").setOrigin(0).setDepth(0).setDisplaySize(800, 600);
+
     
 
 

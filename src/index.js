@@ -8,6 +8,7 @@ import niveau3 from "/src/js/niveau3.js";
 import niveau4 from "/src/js/niveau4.js";
 import commandes from "/src/js/commandes.js";
 import fin from "/src/js/fin.js";
+import regles from "/src/js/regles.js";
 
 
 
@@ -33,7 +34,7 @@ var config = {
       debug: false // permet de voir les hitbox et les vecteurs d'acceleration quand mis à true tg baptiste 
     }
   },
-  scene: [selection, niveau1, niveau2, niveau3,commandes,fin,niveau4]
+  scene: [selection, niveau1, niveau2, niveau3,commandes,fin,niveau4,regles]
 };
 
 // création et lancement du jeu

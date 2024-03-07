@@ -8,29 +8,38 @@ export default class niveau4 extends Phaser.Scene {
       this.groupe_plateformes = null;
       this.clavier = null;
       this.gameOver=null; 
-      this.vie=3;
+      this.vie=10;
       this.zone_texte_score;
       this.text=null;
       this.plateforme_supprime;
       this.plateforme_mobile;
       this.tween_mouvement; 
       this.levier; 
+      this.nb_aide=0;
       
       
     }
   
     preload() {
-      this.load.image("tuilesdejeu", "src/assets/Cube.png")
-      this.load.image("tuilesdejeu2", "src/assets/ciel.png")
-      this.load.image("tuilesdejeu3", "src/assets/Background.png")
+      this.load.image("tuilesdejeuA", "src/assets/Cube.png")
+      this.load.image("tuilesdejeu2A", "src/assets/ciel.png")
+      this.load.image("tuilesdejeu3A", "src/assets/Background.png")
       this.load.image("tuilesdejeu4", "src/assets/Deco.png")
       this.load.image("tuilesdejeu5", "src/assets/pic.png")
       this.load.image("img_plateforme_mobile", "src/assets/plateforme_amovible.png"); 
-      this.load.tilemapTiledJSON("carte", "src/assets/map_niveau_bonus.tmj");
+      this.load.tilemapTiledJSON("carte4", "src/assets/map_niveau_bonus.tmj");
       this.load.image("img_levier", "src/assets/levier.png");
+      this.load.image('porte_retour2', 'src/assets/door3.png'); 
+      this.load.audio('bgniveau4', 'src/assets/niveau4.mp3');
+      this.load.image('4_indice1', 'src/assets/Niveau4_Indice1.png'); 
+    this.load.image('4_indice2', 'src/assets/Niveau4_Indice2.png'); 
+    this.load.image('4_indice3', 'src/assets/Niveau4_Indice3.png'); 
+    this.load.image('icone_indice', 'src/assets/indicen.png'); 
+    this.load.image('fleche', 'src/assets/flecheretourb.png'); 
 
-      this.load.image('soundon', 'src/assets/SoundOn.png'); 
-      this.load.image('soundoff', 'src/assets/SoundOff.png'); 
+
+      this.load.image('soundon4', 'src/assets/SoundOn2.png'); 
+      this.load.image('soundoff4', 'src/assets/SoundOff2.png'); 
   
       this.load.spritesheet("img_perso", "src/assets/farmer.png", {
         frameWidth: 45,
@@ -45,14 +54,15 @@ export default class niveau4 extends Phaser.Scene {
       this.player.setCollideWorldBounds(true); 
       this.physics.add.collider(this.player, this.groupe_plateformes); 
       this.physics.world.setBounds(-50,0, 2800, 1000);
-      this.player.setBounce(0.2); 
+      
       this.player.setScale(grossisment);
       this.clavier = this.input.keyboard.createCursorKeys(); 
+
       this.levier = this.physics.add.staticSprite(20, 140, "img_levier");
       this.levier.active = false;
       this.levier.setDepth(1); // Vous pouvez ajuster la valeur selon vos besoins
       this.levier.setScale(0.7);
-      
+      this.levier.setOrigin(0.5, 0.5);
 
       
      
@@ -77,19 +87,19 @@ export default class niveau4 extends Phaser.Scene {
         frameRate: 20
       });
   
-      const map = this.add.tilemap("carte");
+      const map4 = this.add.tilemap("carte4");
   
-      const ts1 = map.addTilesetImage("Cube", "tuilesdejeu");
-      const ts2 = map.addTilesetImage("Ciel", "tuilesdejeu2");
-      const ts3 = map.addTilesetImage("Fond", "tuilesdejeu3");
-      const ts4 = map.addTilesetImage("Deco","tuilesdejeu4")
-      const ts5 = map.addTilesetImage("Pic","tuilesdejeu5")
+      const ts1 = map4.addTilesetImage("Cube", "tuilesdejeuA");
+      const ts2 = map4.addTilesetImage("Ciel", "tuilesdejeu2A");
+      const ts3 = map4.addTilesetImage("Fond", "tuilesdejeu3A");
+      const ts4 = map4.addTilesetImage("Deco","tuilesdejeu4")
+      const ts5 = map4.addTilesetImage("Pic","tuilesdejeu5")
 
-      const Fond = map.createLayer("Fond", [ts1, ts2, ts3,ts4]);
-      const Invisible_solide = map.createLayer("Invisible_solide", [ts1, ts2, ts3,ts4]);
-      const Deco = map.createLayer("Deco", [ts1, ts2, ts3, ts4, ts5]);
-      const Mur_transparent = map.createLayer("Mur_transparent", [ts1, ts2, ts3, ts4]);     
-      this.Plateforme = map.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
+      const Fond = map4.createLayer("Fond", [ts1, ts2, ts3,ts4]);
+      const Invisible_solide = map4.createLayer("Invisible_solide", [ts1, ts2, ts3,ts4]);
+      const Deco = map4.createLayer("Deco", [ts1, ts2, ts3, ts4, ts5]);
+      const Mur_transparent = map4.createLayer("Mur_transparent", [ts1, ts2, ts3, ts4]);     
+      this.Plateforme = map4.createLayer("Plateforme", [ts1, ts2, ts3, ts4, ts5]); 
      
     
       this.Plateforme.setCollisionByProperty({ estSolide: true }); 
@@ -117,7 +127,7 @@ export default class niveau4 extends Phaser.Scene {
   this.text = this.add.text(
     16, // Coordonnée X par rapport à la caméra
     16, // Coordonnée Y par rapport à la caméra
-    "Il vous reste " + this.vie + " vies",
+    "Il vous reste " + this.vie + " vie(s)",
     {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: "22pt",
@@ -160,7 +170,89 @@ export default class niveau4 extends Phaser.Scene {
     hold: 1000,   // délai avant le yoyo : temps qeu al plate-forme reste en haut
     repeatDelay: 1000, // deléi avant la répétition : temps que la plate-forme reste en bas
     repeat: -1 // répétition infinie 
+
+    
+    
   });
+    this.porteContactee =false;
+
+    this.porte_retour2 = this.physics.add.sprite(373, 872, "porte_retour2").setDisplaySize(30, 50).setDepth(10);
+
+    this.porte_retour2.body.allowGravity =false;
+    
+
+
+    this.music = this.sound.add('bgniveau4');
+    this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
+
+
+    this.bouton_SoundOn = this.add.image(750, 35, "soundon4").setDepth(1).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_SoundOn.setInteractive();
+    this.music.play();
+    this.musicPlaying=true;
+
+    this.bouton_SoundOn.on("pointerup", () => {
+      if (this.musicPlaying) {
+          this.music.stop(); // Arrêter la musique
+          this.bouton_SoundOn.setTexture("soundoff4").setDisplaySize(40, 40); // Changer le bouton en Sound Off
+          this.musicPlaying = false; // Mettre à jour le statut de la musique
+      } else {
+          this.music.play(); // Reprendre la musique
+          this.bouton_SoundOn.setTexture("soundon4").setDisplaySize(60, 45); // Changer le bouton en Sound On
+          this.musicPlaying = true; // Mettre à jour le statut de la musique
+      }
+  });
+
+
+  this.bouton_indice4= this.add.image(680, 35, "icone_indice").setDepth(101).setDisplaySize(60, 45).setScrollFactor(0);
+  this.bouton_indice4.setInteractive();
+
+  this.bouton_indice4.on("pointerup", () => {
+    if (this.nb_aide==0) {
+      this.bouton_indice4.setVisible(false);
+    this.physics.pause();
+    this.image_14=this.add.image(450, 300, "4_indice1").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
+    this.bouton_retour14= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_retour14.setInteractive();
+    this.bouton_retour14.on("pointerup", () => {
+      this.bouton_indice4.setVisible(true);
+    this.image_14.destroy();
+    this.nb_aide=1;
+    this.physics.resume();
+    this.bouton_retour14.destroy();
+   });
+  }
+    if (this.nb_aide==1) {
+      this.bouton_indice4.setVisible(false);
+      this.physics.pause();
+      this.image_24=this.add.image(450, 300, "4_indice2").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
+    this.bouton_retour24= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+    this.bouton_retour24.setInteractive();
+    this.bouton_retour24.on("pointerup", () => {
+      this.bouton_indice4.setVisible(true);
+    this.image_24.destroy();
+    this.nb_aide=2;
+    this.physics.resume();
+    this.bouton_retour24.destroy();
+  });
+    } if (this.nb_aide==2){
+      this.bouton_indice4.setVisible(false);
+      this.physics.pause();
+      this.image_34=this.add.image(450, 300, "4_indice3").setDepth(101).setDisplaySize(500, 600).setScrollFactor(0);
+      this.bouton_retour34= this.add.image(750, 550, "fleche").setDepth(102).setDisplaySize(60, 45).setScrollFactor(0);
+      this.bouton_retour34.setInteractive();
+      this.bouton_retour34.on("pointerup", () => {
+        this.bouton_indice4.setVisible(true);
+      this.image_34.destroy();
+      this.nb_aide=0;
+      this.physics.resume();
+      this.bouton_retour34.destroy();
+    });
+    }
+});
+
+
+
 
     }
   
@@ -186,7 +278,8 @@ export default class niveau4 extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
           if (this.physics.overlap(this.player, this.porte_retour)) {
               console.log("niveau 4 : retour vers selection");
-              this.scene.switch("selection");
+              this.scene.start("fin");
+              this.music.stop();
           }
       }
   
@@ -231,11 +324,28 @@ export default class niveau4 extends Phaser.Scene {
       this.gameOver = false;
       this.vie=this.vie-1;
       this.text.setText("Il vous reste " + this.vie + " vie(s)");
+      this.plateforme_supprime.setPosition(2687, 300);
     }
     
     if (this.vie==0){
-      this.vie=3;
+      this.vie=10;
       this.scene.start("fin")
+      this.music.stop();
+    }
+
+    if (this.clavier.space.isDown && this.physics.overlap(this.player, this.porte_retour2)) {
+      // Si la porte n'a pas déjà été contactée
+      if (!this.porteContactee) {
+        // Marquer la porte comme contactée
+        this.porteContactee = true;
+        // Rediriger vers la scène de sélection
+        this.scene.start("commandes");
+        this.music.stop();
+        this.vie=5;
+      }
+    } else {
+      // Si le joueur n'est plus en collision avec la porte, réinitialiser le marqueur
+      this.porteContactee = false;
     }
 }
 }
