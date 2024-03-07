@@ -14,10 +14,7 @@ export default class niveau2 extends Phaser.Scene {
     this.text = null;
     this.boule=null;
     this.groupeBullets=null; 
-<<<<<<< HEAD
-=======
     this.nb_aide=0;
->>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
   }
   // mise en place d'une variable groupeCibles
   preload() {
@@ -37,8 +34,6 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image('porte', 'src/assets/door3.png');
     this.load.image('feunard','src/assets/feunard.png');
     this.load.image('feu','src/assets/feu.png');
-<<<<<<< HEAD
-=======
     this.load.audio('bgniveau2', 'src/assets/niveau2.mp3');
     this.load.image('soundon3', 'src/assets/SoundOn2.png'); 
       this.load.image('soundoff3', 'src/assets/SoundOff2.png');
@@ -49,7 +44,6 @@ export default class niveau2 extends Phaser.Scene {
       this.load.image('icone_indice', 'src/assets/indicen.png'); 
       this.load.image('fleche', 'src/assets/flecheretour.png'); 
       this.load.image('doublefleche2', 'src/assets/doublefleche.png'); 
->>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
   }
 
   create() {
@@ -223,10 +217,6 @@ this.text = this.add.text(
  this.porteContactee =false;
 
  this.porte_retour = this.physics.add.sprite(5984, 576, "porte").setDisplaySize(64, 96).setDepth(-100);
-<<<<<<< HEAD
-=======
-
->>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
  this.porte_retour.body.allowGravity = false;
     this.physics.add.collider(this.projectiles, niveau_neige, this.projectileCollision, null, this);
     this.physics.add.collider(this.projectiles, blocs_caches, this.projectileCollision, null, this);
@@ -247,9 +237,6 @@ this.physics.add.overlap(this.groupeBullets, farfurets, this.collisionFeuEnnemi,
 this.physics.add.overlap(this.groupeBullets, feunards, this.collisionFeuEnnemi, null, this);
 this.physics.add.overlap(this.groupeBullets, this.projectiles, this.collisionFeuEnnemi, null, this);
 
-<<<<<<< HEAD
-  }
-=======
 this.music = this.sound.add('bgniveau2');
     this.musicPlaying = true; // Variable de statut pour suivre si la musique est en cours de lecture
 
@@ -338,7 +325,6 @@ this.bouton_passer2 = this.add.image(700, 550, "doublefleche2").setDepth(1).setD
 
 
   }
->>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
   
 
   update() {

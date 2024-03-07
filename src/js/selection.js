@@ -50,11 +50,7 @@
       //Cas ou la sourris clique sur le bouton play :
       // on lance le niveau 1
       bouton_play.on("pointerup", () => {
-<<<<<<< HEAD
-        this.scene.start("niveau2");
-=======
         this.scene.start("regles");
->>>>>>> 3d69441ff6a7365cf5a0f967001feb73b0fc8ef3
         this.music.stop();
       });
       //bouton_settings.on("pointerup", () => {
