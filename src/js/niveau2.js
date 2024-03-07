@@ -47,7 +47,7 @@ export default class niveau2 extends Phaser.Scene {
   }
 
   create() {
-     
+    this.affichage=2;
     this.player = this.physics.add.sprite(416, 576, 'img_perso'); 
     this.player.setDepth(100);
     this.player.setCollideWorldBounds(true); 

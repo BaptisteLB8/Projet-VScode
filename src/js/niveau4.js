@@ -48,6 +48,7 @@ export default class niveau4 extends Phaser.Scene {
     }
   
     create() {
+      this.affichage=4;
       const grossisment =0.7;
       this.player = this.physics.add.sprite(440, 0, 'img_perso');
       this.player.setDepth(100);

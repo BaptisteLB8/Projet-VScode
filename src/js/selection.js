@@ -3,6 +3,7 @@
 
 
     constructor() {
+      
       super({ key: "selection" });
      
     }
@@ -17,6 +18,7 @@
     }
   
     create() {
+      this.affichage=0;
       this.add.image(0, 0, "image_fond").setOrigin(0).setDepth(0).setDisplaySize(800, 600)
   
       //on ajoute un bouton de clic, nommé bouton_play

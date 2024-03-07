@@ -43,6 +43,7 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   create() {
+    this.affichage=3;
     this.porteContactee=true;
     const grossisment =0.7;
     this.player = this.physics.add.sprite(0, 0, 'img_perso');

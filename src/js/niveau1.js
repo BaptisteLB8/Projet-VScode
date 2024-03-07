@@ -42,6 +42,7 @@ export default class niveau1 extends Phaser.Scene {
   }
 
   create() {
+    this.affichage=1;
     const largeurFenetre = 1600;
     const hauteurFenetre = 600;
 
