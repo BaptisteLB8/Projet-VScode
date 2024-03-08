@@ -325,7 +325,7 @@ export default class niveau4 extends Phaser.Scene {
       this.gameOver = false;
       this.vie=this.vie-1;
       this.text.setText("Il vous reste " + this.vie + " vie(s)");
-      this.plateforme_supprime.setPosition(2687, 300);
+      this.plateforme_supprime.setPosition(2430, 250);
     }
     
     if (this.vie==0){
